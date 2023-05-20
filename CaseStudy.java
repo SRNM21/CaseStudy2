@@ -32,7 +32,7 @@ public class CaseStudy
         while (running) running = cs.MainMenu();
 
         gsystem.GENERATE_TITLE("null");
-        gsystem.PRINTLN("THE END");
+        gsystem.PRINTLN(50,"THE END");
     }
 
     private boolean MainMenu()
@@ -40,12 +40,12 @@ public class CaseStudy
         gsystem.CLS();
         gsystem.HEADER();
         gsystem.GENERATE_TITLE("main_menu");
-        gsystem.PRINTLN();
-        gsystem.PRINTLN("[1] - ORDER FOOD\n");
-        gsystem.PRINTLN("[2] - ADMINISTRATION\n");
-        gsystem.PRINTLN("[3] - EXIT\n");
-        gsystem.PRINTLN();
-        gsystem.PRINT("ENTER CHOICE:  ");
+        System.out.println();
+        gsystem.PRINTLN(50,"[1] - ORDER FOOD\n");
+        gsystem.PRINTLN(50,"[2] - ADMINISTRATION\n");
+        gsystem.PRINTLN(50,"[3] - EXIT\n");
+        System.out.println();
+        gsystem.PRINT(50,"ENTER CHOICE:  ");
         int mm = erh.getChoice(1, 3);
     
         switch (mm)

@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.security.cert.X509CRLSelector;
 import java.util.ArrayList;
 
 public class GSystem 
@@ -24,37 +25,34 @@ public class GSystem
     {
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
-        new GSystem().PRINT("Press any key...");
+        new GSystem().PRINT(48, "Press any key...");
 
         try { input.readLine(); } 
         catch (Exception e) { e.printStackTrace(); }
     }
-
-    protected void PRINTLN()
+    
+    protected void PRINT(int spaces, String x)
     {
-        System.out.println("\t\t\t\t\t\t");
+        StringBuilder sb = new StringBuilder(x);
+        for (int i = 0; i < spaces; i++) sb.insert(0, ' ');
+        System.out.print(sb);
     }
 
-    protected void PRINTLN(String x)
+    protected void PRINTLN(int spaces, String x)
     {
-        System.out.println("\t\t\t\t\t\t" + x);
+        StringBuilder sb = new StringBuilder(x);
+        for (int i = 0; i < spaces; i++) sb.insert(0, ' ');
+        System.out.println(sb);
     }
 
-    protected void PRINT(String x)
-    {
-        System.out.print("\t\t\t\t\t\t" + x);
-    }
-
-    protected void PRINTF(String format, Object ... args)
-    {
-        System.out.print("\t\t\t\t\t\t");
+    protected void PRINTF(int spaces, String format, Object ... args)
+    {        
+        for (int i = 0; i < spaces; i++) System.out.print(' ');
         System.out.printf(format, args);
     }
 
     protected String FILL(int count, char x) 
     {
-        if (count <= 0) return null;
-
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < count; i++) sb.append(x);
 

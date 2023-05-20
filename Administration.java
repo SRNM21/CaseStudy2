@@ -17,12 +17,12 @@ public class Administration
             gsystem.CLS();
             gsystem.HEADER();
             gsystem.GENERATE_TITLE("administration");
-            gsystem.PRINTLN();
-            gsystem.PRINTLN("[0] - BACK\n");
-            gsystem.PRINTLN("[1] - MANAGE MENU\n");
-            gsystem.PRINTLN("[2] - REPORT\n");
-            gsystem.PRINTLN();
-            gsystem.PRINT("ENTER CHOICE:  ");
+            System.out.println();
+            gsystem.PRINTLN(50, "[0] - BACK\n");
+            gsystem.PRINTLN(50, "[1] - MANAGE MENU\n");
+            gsystem.PRINTLN(50, "[2] - REPORT\n");
+            System.out.println();
+            gsystem.PRINT(50, "ENTER CHOICE:  ");
             int ad = erh.getChoice(0, 2);
 
             switch (ad)
@@ -41,14 +41,14 @@ public class Administration
             gsystem.CLS();
             gsystem.HEADER();
             gsystem.GENERATE_TITLE("manage_menu");
-            gsystem.PRINTLN();
-            gsystem.PRINTLN("[0] - BACK\n");
-            gsystem.PRINTLN("[1] - MEALS\n");
-            gsystem.PRINTLN("[2] - SANDWICH\n");
-            gsystem.PRINTLN("[3] - DRINKS\n");
-            gsystem.PRINTLN("[4] - SHOW ITEMS\n");
-            gsystem.PRINTLN();
-            gsystem.PRINT("ENTER CHOICE:  ");
+            System.out.println();
+            gsystem.PRINTLN(50, "[0] - BACK\n");
+            gsystem.PRINTLN(50, "[1] - MEALS\n");
+            gsystem.PRINTLN(50, "[2] - SANDWICH\n");
+            gsystem.PRINTLN(50, "[3] - DRINKS\n");
+            gsystem.PRINTLN(50, "[4] - SHOW ITEMS\n");
+            System.out.println();
+            gsystem.PRINT(50, "ENTER CHOICE:  ");
             int admm1 = erh.getChoice(0, 4);
 
             switch (admm1)
@@ -67,12 +67,12 @@ public class Administration
         gsystem.CLS();
         gsystem.HEADER();
         gsystem.GENERATE_TITLE(CAT);
-        gsystem.PRINTLN();
-        gsystem.PRINTLN("[0] - BACK\n");
-        gsystem.PRINTLN("[1] - ADD ITEM\n");
-        gsystem.PRINTLN("[2] - DELETE ITEM\n");
-        gsystem.PRINTLN();
-        gsystem.PRINT("ENTER CHOICE:  ");
+        System.out.println();
+        gsystem.PRINTLN(50, "[0] - BACK\n");
+        gsystem.PRINTLN(50, "[1] - ADD ITEM\n");
+        gsystem.PRINTLN(50, "[2] - DELETE ITEM\n");
+        System.out.println();
+        gsystem.PRINT(50, "ENTER CHOICE:  ");
         int admm2 = erh.getChoice(0, 2);
 
         switch (admm2) 
@@ -96,46 +96,46 @@ public class Administration
             gsystem.CLS();
             gsystem.HEADER();
             gsystem.GENERATE_TITLE(CAT);
-            gsystem.PRINTLN();
+            System.out.println();
 
             try 
             {
-                gsystem.PRINTLN("ENTER DESIRED ITEM THAT YOU WANT TO ADD ON THIS MENU  "); 
-                gsystem.PRINT(">>  ");    
+                gsystem.PRINTLN(50, "ENTER DESIRED ITEM THAT YOU WANT TO ADD ON THIS MENU  "); 
+                gsystem.PRINT(50, ">>  ");    
                 item = br.readLine();
     
-                gsystem.PRINTLN();
+                System.out.println();
 
-                gsystem.PRINTLN("ENTER ITEM'S AMOUNT:  ");
-                gsystem.PRINT(">>  ");   
+                gsystem.PRINTLN(50, "ENTER ITEM'S AMOUNT:  ");
+                gsystem.PRINT(50, ">>  ");   
                 amount = erh.getAmount();
             } 
             catch (IOException e) { e.printStackTrace(); }
             
-            gsystem.PRINTLN();
+            System.out.println();
 
             if (MAP.containsKey(item))
             {
-                gsystem.PRINTLN("THIS ITEM IS ALREADY EXIST");
-                gsystem.PRINT("DO YOU WANT TO ADD OTHER ITEM INSTEAD? (y/n):  ");
+                gsystem.PRINTLN(50, "THIS ITEM IS ALREADY EXIST");
+                gsystem.PRINT(50, "DO YOU WANT TO ADD OTHER ITEM INSTEAD? (y/n):  ");
                 runAgain = erh.getConfirmation();
             }
             else
             { 
-                gsystem.PRINTLN("ITEM        :  " + item);
-                gsystem.PRINTLN("AMOUNT      :  " + "Php " + amount);
-                gsystem.PRINTLN();
-                gsystem.PRINT("ARE YOU SURE TO ADD THIS ITEM? (y/n):  ");
+                gsystem.PRINTLN(50, "ITEM        :  " + item);
+                gsystem.PRINTLN(50, "AMOUNT      :  " + "Php " + amount);
+                System.out.println();
+                gsystem.PRINT(50, "ARE YOU SURE TO ADD THIS ITEM? (y/n):  ");
                 boolean confirm = erh.getConfirmation();
 
                 if (confirm)
                 {
                     MAP.put(item, amount);
-                    gsystem.PRINTLN("ITEM IS ADDED SUCCESSFULLY!");
+                    gsystem.PRINTLN(50, "ITEM IS ADDED SUCCESSFULLY!");
                 }
                 else 
                 { 
-                    gsystem.PRINTLN("ADDING ITEM IS CANCELLED SUCCESSFULLY!");
+                    gsystem.PRINTLN(50, "ADDING ITEM IS CANCELLED SUCCESSFULLY!");
                 }
             }
         }
@@ -160,35 +160,35 @@ public class Administration
 
             try 
             {
-                gsystem.PRINT("ENTER ITEM THAT YOU WANT TO DELETE:  ");
+                gsystem.PRINT(50, "ENTER ITEM THAT YOU WANT TO DELETE:  ");
                 item = br.readLine();
             } 
             catch (IOException e) { e.printStackTrace(); }
             
-            gsystem.PRINTLN();
+            System.out.println();
             
             if (MAP.containsKey(item))
             {
-                gsystem.PRINTLN("ITEM        :  " + item);
-                gsystem.PRINTLN("AMOUNT      :  " + "Php " + MAP.get(item));
-                gsystem.PRINTLN();
-                gsystem.PRINT("ARE YOU SURE TO DELETE THIS ITEM? (y/n):  ");
+                gsystem.PRINTLN(50, "ITEM        :  " + item);
+                gsystem.PRINTLN(50, "AMOUNT      :  " + "Php " + MAP.get(item));
+                System.out.println();
+                gsystem.PRINT(50, "ARE YOU SURE TO DELETE THIS ITEM? (y/n):  ");
                 boolean confirm = erh.getConfirmation();
 
                 if (confirm)
                 {
                     MAP.remove(item); 
-                    gsystem.PRINTLN("ITEM IS DELETED SUCCESSFULLY!");
+                    gsystem.PRINTLN(50, "ITEM IS DELETED SUCCESSFULLY!");
                 }
                 else 
                 { 
-                    gsystem.PRINTLN("DELETING ITEM IS CANCELLED SUCCESSFULLY!");
+                    gsystem.PRINTLN(50, "DELETING ITEM IS CANCELLED SUCCESSFULLY!");
                 }
             }
             else 
             { 
-                gsystem.PRINTLN("ITEM DOES NOT EXIST");
-                gsystem.PRINT("DO YOU WANT TO DELETE OTHER ITEM INSTEAD? (y/n):  ");
+                gsystem.PRINTLN(50, "ITEM DOES NOT EXIST");
+                gsystem.PRINT(50, "DO YOU WANT TO DELETE OTHER ITEM INSTEAD? (y/n):  ");
                 runAgain = erh.getConfirmation();
             }
         }
@@ -204,20 +204,20 @@ public class Administration
         gsystem.HEADER();
         gsystem.GENERATE_TITLE("administration");
 
-        gsystem.PRINTLN();
-        gsystem.PRINTLN("MEALS");
+        System.out.println();;
+        gsystem.PRINTLN(50, "MEALS");
         for (String item : CaseStudy.MEALS_ITEMS.keySet()) 
-            gsystem.PRINTLN(item + " = " + CaseStudy.MEALS_ITEMS.get(item));
+            gsystem.PRINTLN(50, item + " = " + CaseStudy.MEALS_ITEMS.get(item));
         
-        gsystem.PRINTLN();
-        gsystem.PRINTLN("SANDWICH");
+            System.out.println();
+        gsystem.PRINTLN(50, "SANDWICH");
         for (String item : CaseStudy.SANDWICH_ITEMS.keySet()) 
-            gsystem.PRINTLN(item + " = " + CaseStudy.SANDWICH_ITEMS.get(item));
+            gsystem.PRINTLN(50,item + " = " + CaseStudy.SANDWICH_ITEMS.get(item));
         
-        gsystem.PRINTLN();
-        gsystem.PRINTLN("DRINKS");
+            System.out.println();
+        gsystem.PRINTLN(50, "DRINKS");
         for (String item : CaseStudy.DRINKS_ITEMS.keySet()) 
-            gsystem.PRINTLN(item + " = " + CaseStudy.DRINKS_ITEMS.get(item));
+            gsystem.PRINTLN(50, item + " = " + CaseStudy.DRINKS_ITEMS.get(item));
             
         gsystem.GENERATE_TITLE("null");
         gsystem.WAIT();

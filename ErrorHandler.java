@@ -35,16 +35,16 @@ public class ErrorHandler
             String input = null;
 
             try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(INVALID); } 
+            catch (IOException e) { gsystem.PRINT(50, INVALID); } 
             
             try  
             {
                 int i = Integer.parseInt(input);
 
                 if (i >= origin && i <= bound) return i;
-                else gsystem.PRINT(INVALID);
+                else gsystem.PRINT(50,INVALID);
             } 
-            catch (NumberFormatException e) { gsystem.PRINT(INVALID); }
+            catch (NumberFormatException e) { gsystem.PRINT(50,INVALID); }
         }
     }
 
@@ -66,12 +66,12 @@ public class ErrorHandler
             invalid = false;
 
             try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(INVALID); } 
+            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
             
             try { price = Double.parseDouble(input); } 
             catch (NumberFormatException e) 
             {  
-                gsystem.PRINT(INVALID);
+                gsystem.PRINT(50,INVALID);
                 invalid = true;
             }
         }
@@ -98,7 +98,7 @@ public class ErrorHandler
             invalid = false;
 
             try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(INVALID); } 
+            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
             
             try 
             {
@@ -108,7 +108,7 @@ public class ErrorHandler
             } 
             catch (NumberFormatException e) 
             {  
-                gsystem.PRINT(INVALID);
+                gsystem.PRINT(50,INVALID);
                 invalid = true;
             }
         }
@@ -143,12 +143,12 @@ public class ErrorHandler
                     case "n" -> { return false; }
                     default ->
                     {
-                        gsystem.PRINT(INVALID);
+                        gsystem.PRINT(50,INVALID);
                         invalid = true;
                     }
                 }
             } 
-            catch (IOException e) { gsystem.PRINT(INVALID); } 
+            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
         }
         while (invalid);
 
