@@ -48,7 +48,6 @@ public class ErrorHandler
         }
     }
 
-    //todo: merge getAmount and getQuantity
     /**
      * Returns a completely {@code double} value inputted by the user
      * 
