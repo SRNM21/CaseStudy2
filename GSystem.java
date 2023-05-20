@@ -67,17 +67,16 @@ public class GSystem
         
         for (String word : words) 
         {
-            if (line.length() + word.length() < column)
-            {
-                line.append(word + " ");
-            }
-            else 
+            line.append(word + " ");
+
+            if (line.length() + word.length() > 42)
             {
                 multiLine.add(line.toString());
                 line.setLength(0);
-                line.append(word + " ");
             }
         }
+
+        if (!line.isEmpty()) multiLine.add(line.toString());
 
         return multiLine;
     }

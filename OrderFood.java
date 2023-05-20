@@ -48,9 +48,10 @@ public class OrderFood
             gsystem.GENERATE_TITLE("my_cart");
             System.out.println();
 
+            gsystem.PRINTLN(50, "[0] - BACK\n");
+
             if (CART.isEmpty())
             {
-                gsystem.PRINTLN(50, "[0] - BACK\n");
                 gsystem.PRINTLN(50, "THERE ARE NO ITEMS IN THIS CART\n");
                 System.out.println();
                 gsystem.PRINT(50, "ENTER CHOICE  :  ");
@@ -60,21 +61,39 @@ public class OrderFood
             }
             else
             {
-                gsystem.PRINTLN(50, "[0] - BACK\n");
+                // TODO: herree
+                String format = "%-7s%-45s%-10s%-12s%n";
                 gsystem.PRINTLN(50, "[1] - REMOVE ITEM\n");
                 gsystem.PRINTLN(50, "[2] - CHECK OUT\n");
-        
-                int counter = 1;
     
-                System.out.println("CODE:\t\t\t\tITEM:\t\t\t\tQUANTITY:\t\t\t\tPRICE:");
-                
-                for (int i = 0; i < CART.size(); i++) 
-                    System.out.println(
-                        counter++ + "\t\t" +
-                        CART.get(i).get(0) + "\t\t\t\t" + 
-                        CART.get(i).get(1) + "\t\t" + 
-                        CART.get(i).get(2) + "\t\t\t\t"
-                    ); 
+                gsystem.PRINTLN(40, gsystem.FILL(74, '-'));
+                gsystem.PRINTF(40, format, "CODE", "ITEM", "QUANTITY", "PRICE");
+                gsystem.PRINTLN(40, gsystem.FILL(74, '-') + "\n");
+
+                int counter = 1;
+
+                for (ArrayList<Object> cartItems : CART) 
+                {   
+                    String item = cartItems.get(0).toString();
+                    int quantity = (int) cartItems.get(1);
+                    double amount = (double) cartItems.get(2);
+
+                    String amountFormat = "Php " + amount;
+
+                    if (item.length() > 32) 
+                    {
+                        ArrayList<String> multiLine = gsystem.MULTILINE(item, 42);
+
+                        gsystem.PRINTF(45, format, counter++, quantity, multiLine.get(0), amountFormat);
+                        
+                        for (int i = 1; i < multiLine.size(); i++)
+                            gsystem.PRINTF(45, format, "", multiLine.get(i), "");
+                    } 
+                    else 
+                    {
+                        gsystem.PRINTF(45, format, counter++, quantity, item, amountFormat);
+                    }
+                }
 
                 System.out.println();
                 gsystem.PRINTLN(50, "TOTAL AMOUNT:  " + TOTAL_AMOUNT + "\n");
@@ -117,25 +136,29 @@ public class OrderFood
             }
             else
             {
+                String format = "%-7s%-45s%-12s%n";
+
                 gsystem.PRINTLN(45, gsystem.FILL(64, '-'));
-                gsystem.PRINTF(45, "%-7s%-45s%-12s%n", "CODE", "ITEM", "PRICE");
+                gsystem.PRINTF(45, format, "CODE", "ITEM", "PRICE");
                 gsystem.PRINTLN(45, gsystem.FILL(64, '-') + "\n");
                 int counter = 1;
 
                 for (String item : MENU.keySet()) 
                 {
+                    String priceFormat = "Php " + MENU.get(item);
+                    
                     if (item.length() > 32) 
                     {
-                        ArrayList<String> multiLine = gsystem.MULTILINE(item, 64);
+                        ArrayList<String> multiLine = gsystem.MULTILINE(item, 42);
 
-                        gsystem.PRINTF(45, "%-7s%-45s%-12s%n", counter++, multiLine.get(0), "Php " + MENU.get(item));
+                        gsystem.PRINTF(45, format, counter++, multiLine.get(0), priceFormat);
                         
                         for (int i = 1; i < multiLine.size(); i++)
-                            gsystem.PRINTF(45, "%-7s%-45s%-12s%n", "", multiLine.get(i), "");
+                            gsystem.PRINTF(45, format, "", multiLine.get(i), "");
                     } 
                     else 
                     {
-                        gsystem.PRINTF(45, "%-7s%-45s%-12s%n", counter++, item, "Php " + MENU.get(item));
+                        gsystem.PRINTF(45, format, counter++, item, priceFormat);
                     }
                 }
 
