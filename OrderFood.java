@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class OrderFood 
-{
+{   
     private static final ErrorHandler erh = new ErrorHandler(); 
     private static final GSystem gsystem = new GSystem();
         
@@ -136,11 +136,11 @@ public class OrderFood
             }
             else
             {
-                String format = "%-7s%-45s%-12s%n";
+                String format = "%-7s%-64s%-12s%n";
 
-                gsystem.PRINTLN(45, gsystem.FILL(64, '-'));
-                gsystem.PRINTF(45, format, "CODE", "ITEM", "PRICE");
-                gsystem.PRINTLN(45, gsystem.FILL(64, '-') + "\n");
+                gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
+                gsystem.PRINTF(36, format, "CODE", "ITEM", "PRICE");
+                gsystem.PRINTLN(35, gsystem.FILL(83, '-') + "\n");
                 int counter = 1;
 
                 for (String item : MENU.keySet()) 
@@ -149,16 +149,16 @@ public class OrderFood
                     
                     if (item.length() > 32) 
                     {
-                        ArrayList<String> multiLine = gsystem.MULTILINE(item, 42);
+                        ArrayList<String> multiLine = gsystem.MULTILINE(item, 64);
 
-                        gsystem.PRINTF(45, format, counter++, multiLine.get(0), priceFormat);
+                        gsystem.PRINTF(36, format, counter++, multiLine.get(0), priceFormat);
                         
                         for (int i = 1; i < multiLine.size(); i++)
-                            gsystem.PRINTF(45, format, "", multiLine.get(i), "");
+                            gsystem.PRINTF(36, format, "", multiLine.get(i), "");
                     } 
                     else 
                     {
-                        gsystem.PRINTF(45, format, counter++, item, priceFormat);
+                        gsystem.PRINTF(36, format, counter++, item, priceFormat);
                     }
                 }
 
@@ -181,31 +181,33 @@ public class OrderFood
         String item = MENU.keySet().toArray()[itemID - 1].toString();
 
         System.out.println();
-        gsystem.PRINT(50, "ENTER QUANTITY  :  ");
+        gsystem.PRINT(40, "ENTER QUANTITY:  ");
         int quantity = erh.getQuantity();
 
-        // todo: fix
         double value = MENU.get(item);
         double amount = value * quantity;
         double temp_total_amount = amount + TOTAL_AMOUNT;
 
         System.out.println();
-        gsystem.PRINTLN(45, gsystem.FILL(57, '='));
+        gsystem.PRINTLN(40, gsystem.FILL(64, '='));
+
         if (item.length() > 32)
         {
             ArrayList<String> lines = gsystem.MULTILINE(item, 42);
-            gsystem.PRINTLN(45, "ITEM        :  " + lines.get(0));
-            for (int i = 1; i < lines.size(); i++) 
-                gsystem.PRINTLN(45, gsystem.FILL(15, ' ') + lines.get(i));
-        }
-        else { gsystem.PRINTLN(50, "ITEM        :  " + item); }
+            gsystem.PRINTLN(40, "ITEM        :  " + lines.get(0));
 
-        gsystem.PRINTLN(50, "QUANTITY    :  " + quantity + "x");
-        gsystem.PRINTLN(50, "AMOUNT      :  " + "Php " + amount);
-        gsystem.PRINTLN(50, "TOTAL AMOUNT:  " + "Php " + temp_total_amount);
-        gsystem.PRINTLN(50, gsystem.FILL(57, '='));
+            for (int i = 1; i < lines.size(); i++) 
+                gsystem.PRINTLN(40, gsystem.FILL(15, ' ') + lines.get(i));
+        }
+        else { gsystem.PRINTLN(40, "ITEM        :  " + item); }
+
+        gsystem.PRINTLN(40, "QUANTITY    :  " + quantity + "x");
+        gsystem.PRINTLN(40, "AMOUNT      :  " + "Php " + amount);
+        gsystem.PRINTLN(40, "TOTAL AMOUNT:  " + "Php " + temp_total_amount);
+        gsystem.PRINTLN(40, gsystem.FILL(64, '='));
         System.out.println();
-        gsystem.PRINT(50, "ARE YOU SURE YOU WANT TO ADD THIS ITEM? (y/n)  :");
+        
+        gsystem.PRINT(40, "ARE YOU SURE YOU WANT TO ADD THIS ITEM? (y/n)  :");
         boolean confirmAdd = erh.getConfirmation();
 
         if (confirmAdd)
@@ -213,21 +215,19 @@ public class OrderFood
             TOTAL_AMOUNT += temp_total_amount;
             
             CART.add(new ArrayList<>() 
-            {
-                {
-                    add(item);
-                    add(quantity);
-                    add(amount);
-                }
-            });
+            {{
+                add(item);
+                add(quantity);
+                add(amount);  
+            }});
             
             System.out.println();
-            gsystem.PRINTLN(50, "ITEM HAS BEEN PLACED SUCCESSFULLY!");
+            gsystem.PRINTLN(40, "ITEM HAS BEEN PLACED SUCCESSFULLY!");
         }
         else 
         {
             System.out.println();
-            gsystem.PRINT(50, "DO YOU WANT TO ORDER OTHER ITEM INSTEAD? (y/n):  ");
+            gsystem.PRINT(40, "DO YOU WANT TO ORDER OTHER ITEM INSTEAD? (y/n):  ");
             boolean confirm = erh.getConfirmation();
 
             if (confirm) return true;
@@ -240,7 +240,7 @@ public class OrderFood
 
     private void RemoveToCart(ArrayList<ArrayList<Object>> CART) 
     {
-        gsystem.PRINT(50, "GIVE THE ITEM CODE THAT YOU WANT TO REMOVE:  ");
+        gsystem.PRINT(40, "GIVE THE ITEM CODE THAT YOU WANT TO REMOVE:  ");
         int rc = erh.getChoice(0, CART.size());
 
         switch (rc)
@@ -254,6 +254,7 @@ public class OrderFood
 
                 System.out.println();
                 gsystem.PRINTLN(50, gsystem.FILL(57, '='));
+
                 if (item.length() > 32)
                 {
                     ArrayList<String> lines = gsystem.MULTILINE(item, 42);
