@@ -74,9 +74,9 @@ public class OrderFood
 
                 for (ArrayList<Object> cartItems : CART) 
                 {   
-                    String item = cartItems.get(0).toString();
-                    int quantity = (int) cartItems.get(1);
-                    double amount = (double) cartItems.get(2);
+                    String item     = cartItems.get(0).toString();
+                    int quantity    = (int) cartItems.get(1);
+                    double amount   = (double) cartItems.get(2);
 
                     String amountFormat = "Php " + amount;
 
@@ -184,24 +184,25 @@ public class OrderFood
         gsystem.PRINT(50, "ENTER QUANTITY  :  ");
         int quantity = erh.getQuantity();
 
+        // todo: fix
         double value = MENU.get(item);
         double amount = value * quantity;
-        TOTAL_AMOUNT += amount;
+        double temp_total_amount = amount + TOTAL_AMOUNT;
 
         System.out.println();
-        gsystem.PRINTLN(50, gsystem.FILL(57, '='));
+        gsystem.PRINTLN(45, gsystem.FILL(57, '='));
         if (item.length() > 32)
         {
             ArrayList<String> lines = gsystem.MULTILINE(item, 42);
-            gsystem.PRINTLN(50, "ITEM        :  " + lines.get(0));
+            gsystem.PRINTLN(45, "ITEM        :  " + lines.get(0));
             for (int i = 1; i < lines.size(); i++) 
-            gsystem.PRINTLN(50, gsystem.FILL(15, ' ') + lines.get(i));
+                gsystem.PRINTLN(45, gsystem.FILL(15, ' ') + lines.get(i));
         }
         else { gsystem.PRINTLN(50, "ITEM        :  " + item); }
 
         gsystem.PRINTLN(50, "QUANTITY    :  " + quantity + "x");
         gsystem.PRINTLN(50, "AMOUNT      :  " + "Php " + amount);
-        gsystem.PRINTLN(50, "TOTAL AMOUNT:  " + "Php " + TOTAL_AMOUNT);
+        gsystem.PRINTLN(50, "TOTAL AMOUNT:  " + "Php " + temp_total_amount);
         gsystem.PRINTLN(50, gsystem.FILL(57, '='));
         System.out.println();
         gsystem.PRINT(50, "ARE YOU SURE YOU WANT TO ADD THIS ITEM? (y/n)  :");
@@ -209,6 +210,8 @@ public class OrderFood
 
         if (confirmAdd)
         {
+            TOTAL_AMOUNT += temp_total_amount;
+            
             CART.add(new ArrayList<>() 
             {
                 {
@@ -217,7 +220,7 @@ public class OrderFood
                     add(amount);
                 }
             });
-
+            
             System.out.println();
             gsystem.PRINTLN(50, "ITEM HAS BEEN PLACED SUCCESSFULLY!");
         }

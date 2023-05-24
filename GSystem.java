@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.security.cert.X509CRLSelector;
 import java.util.ArrayList;
 
 public class GSystem 
@@ -61,15 +60,15 @@ public class GSystem
 
     protected ArrayList<String> MULTILINE(String x, int column)
     {
-        ArrayList<String> multiLine = new ArrayList<>();
         String[] words = x.split(" ");
+        ArrayList<String> multiLine = new ArrayList<>();
         StringBuilder line = new StringBuilder();
         
         for (String word : words) 
         {
             line.append(word + " ");
 
-            if (line.length() + word.length() > 42)
+            if (line.length() + word.length() > column)
             {
                 multiLine.add(line.toString());
                 line.setLength(0);
