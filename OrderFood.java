@@ -1,8 +1,11 @@
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class OrderFood 
 {   
+    private static final DecimalFormat df = new DecimalFormat("0.00");
     private static final ErrorHandler erh = new ErrorHandler(); 
     private static final GSystem gsystem = new GSystem();
         
@@ -11,6 +14,7 @@ public class OrderFood
        
     OrderFood()
     {
+        df.setRoundingMode(RoundingMode.DOWN);
         CART = new ArrayList<>();
         
         while (true)
@@ -61,14 +65,13 @@ public class OrderFood
             }
             else
             {
-                // TODO: herree
                 String format = "%-7s%-45s%-10s%-12s%n";
                 gsystem.PRINTLN(50, "[1] - REMOVE ITEM\n");
                 gsystem.PRINTLN(50, "[2] - CHECK OUT\n");
     
-                gsystem.PRINTLN(40, gsystem.FILL(74, '-'));
+                gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
                 gsystem.PRINTF(40, format, "CODE", "ITEM", "QUANTITY", "PRICE");
-                gsystem.PRINTLN(40, gsystem.FILL(74, '-') + "\n");
+                gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
 
                 int counter = 1;
 
@@ -77,26 +80,27 @@ public class OrderFood
                     String item     = cartItems.get(0).toString();
                     int quantity    = (int) cartItems.get(1);
                     double amount   = (double) cartItems.get(2);
-
-                    String amountFormat = "Php " + amount;
+                    
+                    String amountFormat = "Php " + df.format(amount);
 
                     if (item.length() > 32) 
                     {
                         ArrayList<String> multiLine = gsystem.MULTILINE(item, 42);
 
-                        gsystem.PRINTF(45, format, counter++, quantity, multiLine.get(0), amountFormat);
+                        gsystem.PRINTF(40, format, counter++, multiLine.get(0), quantity, amountFormat);
                         
                         for (int i = 1; i < multiLine.size(); i++)
-                            gsystem.PRINTF(45, format, "", multiLine.get(i), "");
+                            gsystem.PRINTF(40, format, "", multiLine.get(i), "", "");
                     } 
                     else 
                     {
-                        gsystem.PRINTF(45, format, counter++, quantity, item, amountFormat);
+                        gsystem.PRINTF(40, format, counter++, item, quantity, amountFormat);
                     }
                 }
-
+                gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
+                
                 System.out.println();
-                gsystem.PRINTLN(50, "TOTAL AMOUNT:  " + TOTAL_AMOUNT + "\n");
+                gsystem.PRINTLN(50, "TOTAL AMOUNT:  " + df.format(TOTAL_AMOUNT) + "\n");
                 System.out.println();
                 gsystem.PRINT(50, "ENTER CHOICE:  ");
                 int mc = erh.getChoice(0, 2);
@@ -118,6 +122,7 @@ public class OrderFood
         do
         { 
             orderAgain = false;
+            int od = 0;
 
             gsystem.CLS();
             gsystem.HEADER();
@@ -130,9 +135,7 @@ public class OrderFood
                 gsystem.PRINTLN(50, "THERE ARE NO ITEMS IN THIS MENU\n");
                 System.out.println();
                 gsystem.PRINT(50, "ENTER CHOICE:  ");
-                int od = erh.getChoice(0, 0);
-        
-                if (od == 0) return;
+                od = erh.getChoice(0, 0);
             }
             else
             {
@@ -140,12 +143,12 @@ public class OrderFood
 
                 gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
                 gsystem.PRINTF(36, format, "CODE", "ITEM", "PRICE");
-                gsystem.PRINTLN(35, gsystem.FILL(83, '-') + "\n");
+                gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
                 int counter = 1;
 
                 for (String item : MENU.keySet()) 
                 {
-                    String priceFormat = "Php " + MENU.get(item);
+                    String priceFormat = "Php " + df.format(MENU.get(item));
                     
                     if (item.length() > 32) 
                     {
@@ -162,15 +165,18 @@ public class OrderFood
                     }
                 }
 
+                gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
+                
                 System.out.println();
                 gsystem.PRINT(50, "ENTER CODE OF YOUR DESIRED MENU ITEM:  ");
-                int itemID = erh.getChoice(0, MENU.size());
+                od = erh.getChoice(0, MENU.size());
 
-                switch (itemID)
-                {
-                    case 0  -> { return; }
-                    default -> orderAgain = AddToCart(CART, MENU, itemID);
-                }
+            }
+            
+            switch (od)
+            {
+                case 0  -> { return; }
+                default -> orderAgain = AddToCart(CART, MENU, od);
             }
         }
         while (orderAgain);
@@ -181,38 +187,36 @@ public class OrderFood
         String item = MENU.keySet().toArray()[itemID - 1].toString();
 
         System.out.println();
-        gsystem.PRINT(40, "ENTER QUANTITY:  ");
+        gsystem.PRINT(50, "ENTER QUANTITY:  ");
         int quantity = erh.getQuantity();
 
-        double value = MENU.get(item);
-        double amount = value * quantity;
-        double temp_total_amount = amount + TOTAL_AMOUNT;
+        double price = MENU.get(item);
 
         System.out.println();
-        gsystem.PRINTLN(40, gsystem.FILL(64, '='));
+        gsystem.PRINTLN(44, gsystem.FILL(66, '='));
 
         if (item.length() > 32)
         {
-            ArrayList<String> lines = gsystem.MULTILINE(item, 42);
-            gsystem.PRINTLN(40, "ITEM        :  " + lines.get(0));
+            ArrayList<String> lines = gsystem.MULTILINE(item, 52);
+            gsystem.PRINTLN(45, "ITEM        :  " + lines.get(0));
 
             for (int i = 1; i < lines.size(); i++) 
-                gsystem.PRINTLN(40, gsystem.FILL(15, ' ') + lines.get(i));
+                gsystem.PRINTLN(45, gsystem.FILL(15, ' ') + lines.get(i));
         }
-        else { gsystem.PRINTLN(40, "ITEM        :  " + item); }
+        else { gsystem.PRINTLN(45, "ITEM        :  " + item); }
 
-        gsystem.PRINTLN(40, "QUANTITY    :  " + quantity + "x");
-        gsystem.PRINTLN(40, "AMOUNT      :  " + "Php " + amount);
-        gsystem.PRINTLN(40, "TOTAL AMOUNT:  " + "Php " + temp_total_amount);
-        gsystem.PRINTLN(40, gsystem.FILL(64, '='));
+        gsystem.PRINTLN(45, "PRICE       :  " + "Php " + df.format(price));
+        gsystem.PRINTLN(45, "QUANTITY    :  " + quantity + "x");
+        gsystem.PRINTLN(44, gsystem.FILL(66, '='));
         System.out.println();
         
-        gsystem.PRINT(40, "ARE YOU SURE YOU WANT TO ADD THIS ITEM? (y/n)  :");
+        gsystem.PRINT(50, "ARE YOU SURE YOU WANT TO ADD THIS ITEM? (y/n)  :");
         boolean confirmAdd = erh.getConfirmation();
 
         if (confirmAdd)
         {
-            TOTAL_AMOUNT += temp_total_amount;
+            double amount = price * quantity;
+            TOTAL_AMOUNT += amount;
             
             CART.add(new ArrayList<>() 
             {{
@@ -222,12 +226,12 @@ public class OrderFood
             }});
             
             System.out.println();
-            gsystem.PRINTLN(40, "ITEM HAS BEEN PLACED SUCCESSFULLY!");
+            gsystem.PRINTLN(60, "ITEM HAS BEEN PLACED SUCCESSFULLY!");
         }
         else 
         {
             System.out.println();
-            gsystem.PRINT(40, "DO YOU WANT TO ORDER OTHER ITEM INSTEAD? (y/n):  ");
+            gsystem.PRINT(50, "DO YOU WANT TO ORDER OTHER ITEM INSTEAD? (y/n):  ");
             boolean confirm = erh.getConfirmation();
 
             if (confirm) return true;
@@ -240,7 +244,7 @@ public class OrderFood
 
     private void RemoveToCart(ArrayList<ArrayList<Object>> CART) 
     {
-        gsystem.PRINT(40, "GIVE THE ITEM CODE THAT YOU WANT TO REMOVE:  ");
+        gsystem.PRINT(45, "GIVE THE ITEM CODE THAT YOU WANT TO REMOVE:  ");
         int rc = erh.getChoice(0, CART.size());
 
         switch (rc)
@@ -249,8 +253,8 @@ public class OrderFood
             default -> 
             {
                 String item = CART.get(rc - 1).get(0).toString();
-                int quantity = Integer.parseInt(CART.get(rc - 1).get(1).toString());
-                double amount = Double.parseDouble(CART.get(rc - 1).get(2).toString());
+                int quantity = (int) CART.get(rc - 1).get(1);
+                double amount = (double) CART.get(rc - 1).get(2);
 
                 System.out.println();
                 gsystem.PRINTLN(50, gsystem.FILL(57, '='));
@@ -265,10 +269,10 @@ public class OrderFood
                 else { gsystem.PRINTLN(50, "ITEM        :  " + item); }
         
                 gsystem.PRINTLN(50, "QUANTITY    :  " + quantity + "x");
-                gsystem.PRINTLN(50, "AMOUNT  : " + "Php " + amount);
+                gsystem.PRINTLN(50, "AMOUNT  : " + "Php " + df.format(amount));
                 gsystem.PRINTLN(50, gsystem.FILL(57, '='));
                 System.out.println();
-                gsystem.PRINT(50, "ARE YOU SURE YOU WANT TO REMOVE THIS ITEM? (y/n):  ");
+                gsystem.PRINT(45, "ARE YOU SURE YOU WANT TO REMOVE THIS ITEM? (y/n):  ");
 
                 boolean confirm = erh.getConfirmation();
 
@@ -276,11 +280,11 @@ public class OrderFood
                 {
                     CART.remove(rc - 1); 
                     TOTAL_AMOUNT -= amount;
-                    gsystem.PRINTLN(50, "ITEM HAS BEEN REMOVED SUCCESSFULLY!");
+                    gsystem.PRINTLN(45, "ITEM HAS BEEN REMOVED SUCCESSFULLY!");
                 }
                 else 
                 {  
-                    gsystem.PRINTLN(50, "ITEM REMOVAL HAS BEEN CANCELLED SUCCESSFULLY!");
+                    gsystem.PRINTLN(45, "ITEM REMOVAL HAS BEEN CANCELLED SUCCESSFULLY!");
                 }
             }
         }
@@ -296,16 +300,17 @@ public class OrderFood
         int totalItems = 0;
         
         for (int i = 0; i < CART.size(); i++) 
-            totalItems += Integer.parseInt(CART.get(i).get(1).toString());
+            totalItems += (int) CART.get(i).get(1);
 
-            System.out.println();
+        System.out.println();
         gsystem.PRINTLN(50, "TOTAL ITEMS     :  " + totalItems);
         gsystem.PRINTLN(50, "ORIGINAL TOTAL  :  Php " + TOTAL_AMOUNT);
 
         if (haveDiscount)
         {
+            double discountedTotal = (TOTAL_AMOUNT - (TOTAL_AMOUNT * 0.20));
             gsystem.PRINTLN(50, "DISCOUNT        :  20%");
-            gsystem.PRINTLN(50, "DISCOUNTED TOTAL:  Php " + (TOTAL_AMOUNT - (TOTAL_AMOUNT * 0.20)));
+            gsystem.PRINTLN(50, "DISCOUNTED TOTAL:  Php " + df.format(discountedTotal));
         }
         
         System.out.println();

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class GSystem 
 {
+    private final String os = System.getProperty("os.name");
+    
     protected void CLS()
     {   
-        final String os = System.getProperty("os.name");
-
         if (os.contains("Windows"))
         {
             try { new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor(); } 
@@ -22,12 +22,20 @@ public class GSystem
 
     protected void WAIT() 
     {
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        if (os.contains("Windows"))
+        {
+            try { new ProcessBuilder("cmd", "/c", "pause").inheritIO().start().waitFor(); } 
+            catch (Exception e) { e.printStackTrace(); }   
+        }
+        else
+        {
+            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
-        new GSystem().PRINT(48, "Press any key...");
-
-        try { input.readLine(); } 
-        catch (Exception e) { e.printStackTrace(); }
+            new GSystem().PRINT(48, "Press any key...");
+    
+            try { input.readLine(); } 
+            catch (Exception e) { e.printStackTrace(); }
+        }
     }
     
     protected void PRINT(int spaces, String x)

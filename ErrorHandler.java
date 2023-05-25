@@ -12,8 +12,8 @@ import java.io.InputStreamReader;
  */
 public class ErrorHandler 
 {   
-    private static final GSystem gsystem = new GSystem();
-    private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));   
+    private final GSystem gsystem = new GSystem();
+    private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));   
     
     /**
      * Returns a {@code int} value between the specified
@@ -35,16 +35,16 @@ public class ErrorHandler
             String input = null;
 
             try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(40, INVALID); } 
+            catch (IOException e) { gsystem.PRINT(50, INVALID); } 
             
             try  
             {
                 int i = Integer.parseInt(input);
                 
                 if (i >= origin && i <= bound) return i;
-                else gsystem.PRINT(40,INVALID);
+                else gsystem.PRINT(50,INVALID);
             } 
-            catch (NumberFormatException e) { gsystem.PRINT(40,INVALID); }
+            catch (NumberFormatException e) { gsystem.PRINT(50,INVALID); }
         }
     }
 
@@ -66,12 +66,12 @@ public class ErrorHandler
             invalid = false;
 
             try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(40,INVALID); } 
+            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
             
             try { price = Double.parseDouble(input); } 
             catch (NumberFormatException e) 
             {  
-                gsystem.PRINT(40,INVALID);
+                gsystem.PRINT(50,INVALID);
                 invalid = true;
             }
         }
@@ -98,7 +98,7 @@ public class ErrorHandler
             invalid = false;
 
             try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(40,INVALID); } 
+            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
             
             try 
             {
@@ -106,13 +106,13 @@ public class ErrorHandler
 
                 if (quantity <= 0) 
                 {
-                    gsystem.PRINT(40,INVALID);
+                    gsystem.PRINT(50,INVALID);
                     invalid = true; 
                 }
             } 
             catch (NumberFormatException e) 
             {  
-                gsystem.PRINT(40,INVALID);
+                gsystem.PRINT(50,INVALID);
                 invalid = true;
             }
         }
@@ -147,12 +147,12 @@ public class ErrorHandler
                     case "n" -> { return false; }
                     default ->
                     {
-                        gsystem.PRINT(40,INVALID);
+                        gsystem.PRINT(50,INVALID);
                         invalid = true;
                     }
                 }
             } 
-            catch (IOException e) { gsystem.PRINT(40,INVALID); } 
+            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
         }
         while (invalid);
 
