@@ -1,10 +1,9 @@
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
+import java.io.IOException;
 
 public class test
 {
     public static void main(String[] args)
-    {   
-        System.out.println("ITEM HAS BEEN PLACED SUCCESSFULLY!".length());
+    {  
+        new MainProcess();
     }
 } 

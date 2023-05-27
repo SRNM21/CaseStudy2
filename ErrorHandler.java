@@ -87,7 +87,7 @@ public class ErrorHandler
      */
     protected int getQuantity() 
     {
-        final String INVALID = "INVALID INPUT, PLEASE ENTER VALID QUANTITY:  ";
+        final String INVALID = "INVALID INPUT, MIN = 0, MAX = 999:  ";
 
         int quantity = 0;
         boolean invalid;
@@ -104,7 +104,7 @@ public class ErrorHandler
             {
                 quantity = Integer.parseInt(input); 
 
-                if (quantity <= 0) 
+                if (quantity <= 0 || quantity >= 999) 
                 {
                     gsystem.PRINT(50,INVALID);
                     invalid = true; 

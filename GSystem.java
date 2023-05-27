@@ -6,6 +6,20 @@ public class GSystem
 {
     private final String os = System.getProperty("os.name");
     
+    protected void START_SYSTEM() 
+    {
+        if (os.contains("Windows"))
+        {
+            try
+            {          
+                Runtime.getRuntime().exec(new String[]{"cmd", "/k", "javac", "MainProcess.java"});
+                Thread.sleep(2000);
+                Runtime.getRuntime().exec(new String[]{"cmd", "/k", "start", "java", "MainProcess"});
+            }
+            catch (Exception e) { e.printStackTrace(); }
+        }
+    }
+
     protected void CLS()
     {   
         if (os.contains("Windows"))
@@ -20,7 +34,7 @@ public class GSystem
         }
     }
 
-    protected void WAIT() 
+    protected void PAUSE() 
     {
         if (os.contains("Windows"))
         {
