@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GSystem 
 {
@@ -44,8 +45,7 @@ public class GSystem
         else
         {
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-
-            new GSystem().PRINT(48, "Press any key...");
+            System.out.println("Press any key...");
     
             try { input.readLine(); } 
             catch (Exception e) { e.printStackTrace(); }
@@ -100,6 +100,21 @@ public class GSystem
         if (!line.isEmpty()) multiLine.add(line.toString());
 
         return multiLine;
+    }
+    
+    protected String GENERATE_REF_NUM()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        while (sb.length() < 9)
+        {
+            int randomNumber = new Random().nextInt(36);
+            if (sb.length() == 4) sb.append('-');
+            if (randomNumber < 26) sb.append((char) (randomNumber + 65));
+            else sb.append((char) (randomNumber - 26 + 48));
+        }
+
+        return sb.toString();
     }
 
     protected void HEADER()

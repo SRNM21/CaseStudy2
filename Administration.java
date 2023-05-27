@@ -212,28 +212,28 @@ public class Administration
         gsystem.GENERATE_TITLE("administration");
 
         System.out.println();
-        gsystem.PRINTLN(75, "MEALS");
-        PrintMenu(MainProcess.MEALS_ITEMS);
+        PrintMenu(MainProcess.MEALS_ITEMS, "=[ MEALS ]=");
         
         System.out.println("\n");
-        gsystem.PRINTLN(73, "SANDWICH");
-        PrintMenu(MainProcess.SANDWICH_ITEMS);
+        PrintMenu(MainProcess.SANDWICH_ITEMS, "=[ SANDWICH ]=");
         
-        System.out.println("\n");    
-        gsystem.PRINTLN(74, "DRINKS");
-        PrintMenu(MainProcess.DRINKS_ITEMS);
+        System.out.println("\n");  
+        PrintMenu(MainProcess.DRINKS_ITEMS, "=[ DRINKS ]=");
             
+        System.out.println();
         gsystem.GENERATE_TITLE("null");
         gsystem.PAUSE();
     }
 
-    protected void PrintMenu(HashMap<String, Double> MENU)
+    protected void PrintMenu(HashMap<String, Double> MENU, String CAT)
     {
         String format = "%-7s%-64s%-12s%n";
+        double alg = (87 - CAT.length()) / 2.0;
+        String title = gsystem.FILL(((int) Math.round(alg)), '-') + CAT;
 
-        gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
-        gsystem.PRINTF(36, format, "CODE", "ITEM", "PRICE");
-        gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
+        gsystem.PRINTLN(34, title + gsystem.FILL(87 - title.length(), '-'));
+        gsystem.PRINTF(35, format, "CODE", "ITEM", "PRICE");
+        gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
         int counter = 1;
 
         for (String item : MENU.keySet()) 
@@ -246,18 +246,18 @@ public class Administration
             {
                 ArrayList<String> multiLine = gsystem.MULTILINE(item, 64);
 
-                gsystem.PRINTF(36, format, counter++, multiLine.get(0), priceFormat);
+                gsystem.PRINTF(35, format, counter++, multiLine.get(0), priceFormat);
                 
                 for (int i = 1; i < multiLine.size(); i++)
-                    gsystem.PRINTF(36, format, "", multiLine.get(i), "");
+                    gsystem.PRINTF(35, format, "", multiLine.get(i), "");
             }
             else 
             {
-                gsystem.PRINTF(36, format, counter++, item, priceFormat);
+                gsystem.PRINTF(35, format, counter++, item, priceFormat);
             }
         }
         
-        gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
+        gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
     }
 
     //*  TEMPORTARY PRINTER OF ITEMS */

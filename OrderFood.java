@@ -139,9 +139,9 @@ public class OrderFood
             {
                 String format = "%-7s%-64s%-12s%n";
 
-                gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
-                gsystem.PRINTF(36, format, "CODE", "ITEM", "PRICE");
-                gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
+                gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
+                gsystem.PRINTF(35, format, "CODE", "ITEM", "PRICE");
+                gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
                 int counter = 1;
 
                 for (String item : MENU.keySet()) 
@@ -154,18 +154,18 @@ public class OrderFood
                     {
                         ArrayList<String> multiLine = gsystem.MULTILINE(item, 64);
 
-                        gsystem.PRINTF(36, format, counter++, multiLine.get(0), priceFormat);
+                        gsystem.PRINTF(35, format, counter++, multiLine.get(0), priceFormat);
                         
                         for (int i = 1; i < multiLine.size(); i++)
-                            gsystem.PRINTF(36, format, "", multiLine.get(i), "");
+                            gsystem.PRINTF(35, format, "", multiLine.get(i), "");
                     } 
                     else 
                     {
-                        gsystem.PRINTF(36, format, counter++, item, priceFormat);
+                        gsystem.PRINTF(35, format, counter++, item, priceFormat);
                     }
                 }
 
-                gsystem.PRINTLN(35, gsystem.FILL(83, '-'));
+                gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
                 
                 System.out.println();
                 gsystem.PRINT(50, "ENTER CODE OF YOUR DESIRED MENU ITEM:  ");
@@ -227,7 +227,6 @@ public class OrderFood
                 add(amount);  
             }});
             
-            System.out.println();
             System.out.println();
             gsystem.PRINTLN(60, "ITEM HAS BEEN PLACED SUCCESSFULLY!");
         }
@@ -309,11 +308,11 @@ public class OrderFood
         BigDecimal TOTAL_AMOUNT_DIS = TOTAL_AMOUNT.subtract(DISCOUNT);
 
         System.out.println();
-        gsystem.PRINTLN(49, gsystem.FILL(66, '='));
-        gsystem.PRINTLN(50, "AMOUNT      :  Php " + TOTAL_AMOUNT.setScale(2, RoundingMode.DOWN));
-        gsystem.PRINTLN(50, "DISCOUNT    :  Php " + DISCOUNT.setScale(2, RoundingMode.DOWN));
-        gsystem.PRINTLN(50, "TOTAL AMOUNT:  Php " + TOTAL_AMOUNT_DIS.setScale(2, RoundingMode.HALF_UP));
-        gsystem.PRINTLN(49, gsystem.FILL(66, '='));
+        gsystem.PRINTLN(44, gsystem.FILL(66, '='));
+        gsystem.PRINTLN(45, "AMOUNT      :  Php " + TOTAL_AMOUNT.setScale(2, RoundingMode.DOWN));
+        gsystem.PRINTLN(45, "DISCOUNT    :  Php " + DISCOUNT.setScale(2, RoundingMode.DOWN));
+        gsystem.PRINTLN(45, "TOTAL AMOUNT:  Php " + TOTAL_AMOUNT_DIS.setScale(2, RoundingMode.HALF_UP));
+        gsystem.PRINTLN(44, gsystem.FILL(66, '='));
 
         System.out.println();
         gsystem.PRINT(50, "CHECK OUT? (y/n):  ");
