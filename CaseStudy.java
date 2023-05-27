@@ -1,6 +1,6 @@
 /**
  *  This case study is for finals in intermediate programming in Java, specifically for first-year students in their second semester. 
- *  This system requires version {@code JavaSE-20} and must be run in Windows.
+ *  This system requires version {@code JavaSE-20} and must be run in {@code Windows}.
  * 
  *  @author Neelian Mata
  *  @author Jarius Maui Pineda

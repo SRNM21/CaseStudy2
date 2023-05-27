@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class MainProcess 
@@ -16,18 +18,22 @@ public class MainProcess
         boolean running = true;
 
         //* AUTO ADD ITEM */
-        MEALS_ITEMS.put("Burger Steak", 15.20);
-        MEALS_ITEMS.put("Spaghetti", 20.20);
-        MEALS_ITEMS.put("Chicken", 18.20);
-        MEALS_ITEMS.put("Test Long Words one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen", 18.20);
+        try 
+        {
+            File myObj = new File("ITEMS.txt");
 
-        SANDWICH_ITEMS.put("Egg Sandwich", 15.20);
-        SANDWICH_ITEMS.put("Bacon Sandwich", 20.20);
-        SANDWICH_ITEMS.put("Cheese Sandwich", 18.20);
+            if (myObj.createNewFile()) 
+            {
+                System.out.println("File created: " + myObj.getName());
+            } 
+            else 
+            {
+                System.out.println("File already exists.");
+            }
+        } 
+        catch (IOException e) { e.printStackTrace(); }
         
-        DRINKS_ITEMS.put("Water", 15.20);
-        DRINKS_ITEMS.put("Coke", 20.20);
-        DRINKS_ITEMS.put("Iced Tea", 18.20);
+
         //* AUTO ADD ITEM */
         
         while (running) running = MainMenu();

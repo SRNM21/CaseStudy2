@@ -1,8 +1,9 @@
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 public class OrderFood 
 {   
@@ -49,22 +50,21 @@ public class OrderFood
             gsystem.CLS();
             gsystem.HEADER();
             gsystem.GENERATE_TITLE("my_cart");
-            System.out.println();
-
-            gsystem.PRINTLN(50, "[0] - BACK\n");
+            System.out.println(); 
 
             if (CART.isEmpty())
             {
                 gsystem.PRINTLN(50, "THERE ARE NO ITEMS IN THIS CART\n");
                 System.out.println();
-                gsystem.PRINT(50, "ENTER CHOICE  :  ");
-                int mc = erh.getChoice(0, 0);
-        
-                if (mc == 0) return;
+                gsystem.GENERATE_TITLE("null");
+                gsystem.PAUSE();
+
+                return;
             }
             else
             {
                 String format = "%-7s%-45s%-7s%-12s%n";
+                gsystem.PRINTLN(50, "[0] - BACK\n");
                 gsystem.PRINTLN(50, "[1] - REMOVE ITEM\n");
                 gsystem.PRINTLN(50, "[2] - CHECK OUT\n");
     
@@ -321,16 +321,32 @@ public class OrderFood
         System.out.println();
         if (checkout)
         {
-            TOTAL_AMOUNT = new BigDecimal(0);
-            
-            int RefNum = new Random().nextInt(100000000, 999999999);
+            SaveOrderInfo();
 
+            TOTAL_AMOUNT = new BigDecimal(0);
             CART.clear();
+
             gsystem.PRINTLN(65, "CHECKED OUT SUCCESSFULLY!");
         }
         else { gsystem.PRINTLN(61, "CHECK OUT CANCELLED SUCCESSFULLY!"); }
 
         gsystem.GENERATE_TITLE("null");
         gsystem.PAUSE();
+    }
+
+    protected void SaveOrderInfo()
+    {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
+        String dateAndTime = now.format(formatter);
+        String refNum = gsystem.GENERATE_REF_NUM();
+
+        Administration.ORDER_INFO.add(new ArrayList<>() 
+        {{
+            add(dateAndTime.substring(0, 10 ));
+            add(dateAndTime.substring(11));
+            add(refNum);
+            add(TOTAL_AMOUNT);
+        }});
     }
 }

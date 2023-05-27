@@ -105,14 +105,27 @@ public class GSystem
     protected String GENERATE_REF_NUM()
     {
         StringBuilder sb = new StringBuilder();
+        boolean exist = false; 
 
-        while (sb.length() < 9)
-        {
-            int randomNumber = new Random().nextInt(36);
-            if (sb.length() == 4) sb.append('-');
-            if (randomNumber < 26) sb.append((char) (randomNumber + 65));
-            else sb.append((char) (randomNumber - 26 + 48));
+        do 
+        { 
+            while (sb.length() < 14)
+            {
+                int randomNumber = new Random().nextInt(36);
+                if (sb.length() == 4 || sb.length() == 9) sb.append('-');
+                if (randomNumber < 26) sb.append((char) (randomNumber + 65));
+                else sb.append((char) (randomNumber - 26 + 48));
+            }
+        
+            for (ArrayList<Object> info : Administration.ORDER_INFO) 
+                if (info.get(0).equals(sb)) 
+                { 
+                    sb.setLength(0);
+                    exist = true; 
+                    break;
+                }
         }
+        while(exist);
 
         return sb.toString();
     }

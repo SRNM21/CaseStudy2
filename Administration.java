@@ -11,7 +11,7 @@ public class Administration
     private final GSystem gsystem = new GSystem();
 
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));  
-    protected static ArrayList<ArrayList<Object>> CART_ITEMS = new ArrayList<>();
+    protected static ArrayList<ArrayList<Object>> ORDER_INFO = new ArrayList<>();
 
     Administration()
     {
@@ -260,51 +260,38 @@ public class Administration
         gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
     }
 
-    //*  TEMPORTARY PRINTER OF ITEMS */
     private void Report()
     {
+        gsystem.CLS();
+        gsystem.HEADER();
+        gsystem.GENERATE_TITLE("report");
         System.out.println();
-        if (CART_ITEMS.isEmpty())
+
+        if (ORDER_INFO.isEmpty())
         {
-            gsystem.PRINTLN(50, "THERE ARE NO ITEMS IN THIS CART\n");
+            gsystem.PRINTLN(50, "THERE ARE NO ORDERS\n");
             System.out.println();
-            gsystem.PRINT(50, "ENTER CHOICE  :  ");
-            int mc = erh.getChoice(0, 0);
-    
-            if (mc == 0) return;
         }
         else
         {
-            String format = "%-7s%-45s%-7s%-12s%n";
-            gsystem.PRINTLN(74, "REPORT\n");
+            String format = "%-15s%-16s%-21s%-12s%n";
 
-            gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
-            gsystem.PRINTF(40, format, "CODE", "ITEM", "QTY", "PRICE");
-            gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
-            int counter = 1;
+            gsystem.PRINTLN(44, gsystem.FILL(68, '-'));
+            gsystem.PRINTF(45, format, "DATE", "TIME", "REFERENCE NUMBER", "AMOUNT");
+            gsystem.PRINTLN(44, gsystem.FILL(68, '-'));
 
-            for (ArrayList<Object> cartItems : CART_ITEMS)
+            for (ArrayList<Object> info : ORDER_INFO)
             {   
-                String item     = cartItems.get(0).toString();
-                int quantity    = (int) cartItems.get(1);
-                double amount   = new BigDecimal(cartItems.get(2).toString()).doubleValue();
+                String date     = info.get(0).toString();
+                String time     = info.get(1).toString();
+                String refNum   = info.get(2).toString();
+                double amount   = new BigDecimal(info.get(3).toString()).doubleValue();
                 String amountFormat = "Php " + amount;
 
-                if (item.length() > 32) 
-                {
-                    ArrayList<String> multiLine = gsystem.MULTILINE(item, 42);
-                    gsystem.PRINTF(40, format, counter++, multiLine.get(0), quantity, amountFormat);
-                    
-                    for (int i = 1; i < multiLine.size(); i++)
-                        gsystem.PRINTF(40, format, "", multiLine.get(i), "", "");
-                }
-                else 
-                {
-                    gsystem.PRINTF(40, format, counter++, item, quantity, amountFormat);
-                }
+                gsystem.PRINTF(45, format, date, time, refNum, amountFormat);
             }
             
-            gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
+            gsystem.PRINTLN(44, gsystem.FILL(68, '-'));
             System.out.println();
         }
 
