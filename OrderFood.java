@@ -54,7 +54,7 @@ public class OrderFood
 
             if (CART.isEmpty())
             {
-                gsystem.PRINTLN(50, "THERE ARE NO ITEMS IN THIS CART\n");
+                gsystem.PRINTLN(62, "THERE ARE NO ITEMS IN THIS CART\n");
                 System.out.println();
                 gsystem.GENERATE_TITLE("null");
                 gsystem.PAUSE();

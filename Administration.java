@@ -90,7 +90,7 @@ public class Administration
     {  
         boolean runAgain;
         String item = null;
-        double amount = 0;
+        double price = 0;
 
         do 
         {
@@ -111,7 +111,7 @@ public class Administration
 
                 gsystem.PRINTLN(50, "ENTER ITEM'S AMOUNT:  ");
                 gsystem.PRINT(50, ">>  ");   
-                amount = erh.getAmount();
+                price = erh.getAmount();
             } 
             catch (IOException e) { e.printStackTrace(); }
             
@@ -124,10 +124,10 @@ public class Administration
                 runAgain = erh.getConfirmation();
             }
             else
-            { 
+            {
                 gsystem.PRINTLN(44, gsystem.FILL(66, '='));
                 gsystem.PRINTLN(45, "ITEM        :  " + item);
-                gsystem.PRINTLN(45, "AMOUNT      :  Php " + amount);
+                gsystem.PRINTLN(45, "PRICE       :  Php " + price);
                 gsystem.PRINTLN(44, gsystem.FILL(66, '='));
                 System.out.println();
                 gsystem.PRINT(50, "ARE YOU SURE TO ADD THIS ITEM? (y/n):  ");
@@ -137,10 +137,11 @@ public class Administration
 
                 if (confirm)
                 {
-                    MAP.put(item, amount);
+                    MAP.put(item, price);
+                    gsystem.AddToFile(CAT, item, price);
                     gsystem.PRINTLN(64, "ITEM IS ADDED SUCCESSFULLY!");
                 }
-                else 
+                else
                 { 
                     gsystem.PRINTLN(58, "ADDING ITEM IS CANCELLED SUCCESSFULLY!");
                 }
@@ -177,7 +178,7 @@ public class Administration
             if (MAP.containsKey(item))
             {
                 gsystem.PRINTLN(50, "ITEM        :  " + item);
-                gsystem.PRINTLN(50, "AMOUNT      :  Php " + MAP.get(item));
+                gsystem.PRINTLN(50, "PRICE       :  Php " + MAP.get(item));
                 System.out.println();
                 gsystem.PRINT(50, "ARE YOU SURE TO DELETE THIS ITEM? (y/n):  ");
                 boolean confirm = erh.getConfirmation();
@@ -185,6 +186,7 @@ public class Administration
                 if (confirm)
                 {
                     MAP.remove(item); 
+                    gsystem.RemoveToFile(CAT, item);
                     gsystem.PRINTLN(50, "ITEM IS DELETED SUCCESSFULLY!");
                 }
                 else 
@@ -269,7 +271,7 @@ public class Administration
 
         if (ORDER_INFO.isEmpty())
         {
-            gsystem.PRINTLN(50, "THERE ARE NO ORDERS\n");
+            gsystem.PRINTLN(68, "THERE ARE NO ORDERS\n");
             System.out.println();
         }
         else

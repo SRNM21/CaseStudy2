@@ -1,5 +1,3 @@
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 public class MainProcess 
@@ -15,27 +13,11 @@ public class MainProcess
     
     MainProcess() 
     {
+        gsystem.LOADING();
+        gsystem.PAUSE();
+        gsystem.CLS();
+
         boolean running = true;
-
-        //* AUTO ADD ITEM */
-        try 
-        {
-            File myObj = new File("ITEMS.txt");
-
-            if (myObj.createNewFile()) 
-            {
-                System.out.println("File created: " + myObj.getName());
-            } 
-            else 
-            {
-                System.out.println("File already exists.");
-            }
-        } 
-        catch (IOException e) { e.printStackTrace(); }
-        
-
-        //* AUTO ADD ITEM */
-        
         while (running) running = MainMenu();
 
         gsystem.GENERATE_TITLE("null");

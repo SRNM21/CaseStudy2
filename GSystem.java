@@ -1,11 +1,41 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class GSystem 
 {
     private final String os = System.getProperty("os.name");
+    private final File itemData = new File("ITEMS.txt");
+    private ArrayList<HashMap<String, String>> ORIGINAL_ITEMS = new ArrayList<>()
+    {{
+        add(new HashMap<>()
+        {{
+            put("Burger Steak", "99.20");
+            put("Fried Chicken", "80.30"); 
+            put("Spaghetti", "90.20");
+        }});
+
+        add(new HashMap<>()
+        {{
+            put("Fried Chicken Sandwich", "50.80");
+            put("Vegan Sandwich", "40.10"); 
+            put("Egg Sandwich", "29.99");
+        }});
+
+        add(new HashMap<>()
+        {{
+            put("Water", "10.00");
+            put("Iced Tea", "15.30"); 
+            put("Coca Cola", "20.20");
+        }});
+    }};
     
     protected void START_SYSTEM() 
     {
@@ -50,6 +80,49 @@ public class GSystem
             try { input.readLine(); } 
             catch (Exception e) { e.printStackTrace(); }
         }
+    }
+
+    protected void LOADING() 
+    {
+        if (System.getProperty("os.name").contains("Windows"))
+        {
+            StringBuilder loadingBar = new StringBuilder("[" + FILL(50, ' ') + "]");
+            StringBuilder loadingTitle = new StringBuilder("Loading...");
+            
+            int j = 0;
+            int i = 1;
+
+            do 
+            {
+                String loadBar = loadingBar.deleteCharAt(i).insert(i, '#').toString() + " " + (j += 2) + "%";
+                CLS();
+                System.out.println(FILL(15, '\n'));
+                PRINTLN(49, loadingTitle.toString());
+                PRINTLN(49, loadBar);
+                
+                try { Thread.sleep(100); } 
+                catch (InterruptedException e) { e.printStackTrace(); }
+            }
+            while (i++ < 50);
+        }
+        else 
+        {
+            CLS();
+            System.out.println(FILL(15, '\n'));
+            PRINTLN(49, "Loading, Please Wait...");
+
+            try { Thread.sleep(2000); } 
+            catch (InterruptedException e) { e.printStackTrace(); }
+        }    
+
+        System.out.println("\n");
+
+        if (FoundFile())
+            PRINTLN(64, "FILE IS SUCCESFULLY LOADED!");
+        else 
+            PRINTLN(61, "NEW FILE IS SUCCESSFULLY CREATED!");
+        
+        System.out.println(FILL(15, '\n'));
     }
     
     protected void PRINT(int spaces, String x)
@@ -112,22 +185,123 @@ public class GSystem
             while (sb.length() < 14)
             {
                 int randomNumber = new Random().nextInt(36);
+
                 if (sb.length() == 4 || sb.length() == 9) sb.append('-');
                 if (randomNumber < 26) sb.append((char) (randomNumber + 65));
                 else sb.append((char) (randomNumber - 26 + 48));
             }
         
             for (ArrayList<Object> info : Administration.ORDER_INFO) 
+            {
                 if (info.get(0).equals(sb)) 
                 { 
                     sb.setLength(0);
                     exist = true; 
                     break;
                 }
+            }
         }
         while(exist);
 
         return sb.toString();
+    }
+
+    protected boolean FoundFile() 
+    {
+        try 
+        {
+            if (itemData.createNewFile()) 
+            {
+                UpdateFile();
+                LoadFile(); 
+                
+                return false;
+            } 
+            else { LoadFile(); }
+             
+        } 
+        catch (IOException e) { e.printStackTrace(); }
+
+        return true;    
+    }
+
+    protected void LoadFile() 
+    {
+        try (BufferedReader reader = new BufferedReader(new FileReader(itemData)))
+        {   
+            String line;
+
+            int mapIndex = 0;
+            while ((line = reader.readLine()) != null) 
+            {
+                if (line.equals("x")) break;
+                if (line.charAt(0) == '-') 
+                {
+                    mapIndex++;
+                    continue;
+                }
+
+                String item = line;
+                double price = Double.parseDouble(reader.readLine());
+
+                switch (mapIndex) 
+                {
+                    case 1 -> MainProcess.MEALS_ITEMS.put(item, price);
+                    case 2 -> MainProcess.SANDWICH_ITEMS.put(item, price);
+                    case 3 -> MainProcess.DRINKS_ITEMS.put(item, price);
+                }
+            }
+
+            reader.close();
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    protected void AddToFile(String cat, String item, double price) 
+    {
+        switch (cat)
+        {
+            case "manage_menu_meals"    -> ORIGINAL_ITEMS.get(0).put(item, Double.toString(price));
+            case "manage_menu_sandwich" -> ORIGINAL_ITEMS.get(1).put(item, Double.toString(price));
+            case "manage_menu_drinks"   -> ORIGINAL_ITEMS.get(2).put(item, Double.toString(price));
+        }
+
+        UpdateFile();
+    }
+
+    protected void RemoveToFile(String cat, String item) 
+    {
+        switch (cat)
+        {
+            case "manage_menu_meals"    -> ORIGINAL_ITEMS.get(0).remove(item);
+            case "manage_menu_sandwich" -> ORIGINAL_ITEMS.get(1).remove(item);
+            case "manage_menu_drinks"   -> ORIGINAL_ITEMS.get(2).remove(item);
+        }
+
+        UpdateFile();
+    }
+
+    protected void UpdateFile() 
+    {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(itemData)))
+        {
+            int idx = 0;
+            writer.write("-MENU1\n");
+            for (HashMap<String, String> MENU : ORIGINAL_ITEMS) 
+            {
+                for (String items : MENU.keySet()) 
+                {
+                    writer.write(items + "\n");
+                    writer.write(MENU.get(items) + "\n");
+                }
+                
+                if (idx++ < 3)
+                    writer.write("-MENU" + (idx + 2) +"\n");
+            }
+            
+            writer.write("x");
+            writer.close();
+        } 
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     protected void HEADER()

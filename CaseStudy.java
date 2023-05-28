@@ -9,7 +9,8 @@
 public class CaseStudy
 {   
     /*
-        !RUN THE SYSTEM
+        ! RUN THE SYSTEM
+        ! 2 SEC DELAY AFTER RUNNING
     */
     public static void main(String[] args)
     {
