@@ -11,7 +11,7 @@ public class Administration
     private final GSystem gsystem = new GSystem();
 
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));  
-    protected static ArrayList<ArrayList<Object>> ORDER_INFO = new ArrayList<>();
+    protected static ArrayList<ArrayList<Object>> ORDER_REPORTS = new ArrayList<>();
 
     Administration()
     {
@@ -269,10 +269,9 @@ public class Administration
         gsystem.GENERATE_TITLE("report");
         System.out.println();
 
-        if (ORDER_INFO.isEmpty())
+        if (ORDER_REPORTS.isEmpty())
         {
             gsystem.PRINTLN(68, "THERE ARE NO ORDERS\n");
-            System.out.println();
         }
         else
         {
@@ -282,7 +281,7 @@ public class Administration
             gsystem.PRINTF(45, format, "DATE", "TIME", "REFERENCE NUMBER", "AMOUNT");
             gsystem.PRINTLN(44, gsystem.FILL(68, '-'));
 
-            for (ArrayList<Object> info : ORDER_INFO)
+            for (ArrayList<Object> info : ORDER_REPORTS)
             {   
                 String date     = info.get(0).toString();
                 String time     = info.get(1).toString();
@@ -294,9 +293,9 @@ public class Administration
             }
             
             gsystem.PRINTLN(44, gsystem.FILL(68, '-'));
-            System.out.println();
         }
 
+        System.out.println();
         gsystem.GENERATE_TITLE("null");
         gsystem.PAUSE();
     }

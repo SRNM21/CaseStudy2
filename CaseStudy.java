@@ -6,7 +6,7 @@
  *  @author Jarius Maui Pineda
  *  @author Niño Greg Gregorio
  */
-public class CaseStudy
+public class CaseStudy  
 {   
     /*
         ! RUN THE SYSTEM

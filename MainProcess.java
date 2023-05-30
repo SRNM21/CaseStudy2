@@ -20,8 +20,13 @@ public class MainProcess
         boolean running = true;
         while (running) running = MainMenu();
 
+        gsystem.CLS();
+        gsystem.HEADER();
+        gsystem.GENERATE_TITLE("exit");
+        System.out.println("\n\n");
+        gsystem.PRINTLN(62,"THANK YOU FOR USING OUR SYSTEM!");
+        System.out.println("\n\n");
         gsystem.GENERATE_TITLE("null");
-        gsystem.PRINTLN(50,"THE END");
         gsystem.PAUSE();
     }
 

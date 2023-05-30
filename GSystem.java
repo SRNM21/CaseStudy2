@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -13,6 +14,8 @@ public class GSystem
 {
     private final String os = System.getProperty("os.name");
     private final File itemData = new File("ITEMS.txt");
+    private final File OrderReports = new File("REPORTS.txt");
+    private ArrayList<ArrayList<Object>> REPORTS = new ArrayList<>();
     private ArrayList<HashMap<String, String>> ORIGINAL_ITEMS = new ArrayList<>()
     {{
         add(new HashMap<>()
@@ -116,7 +119,8 @@ public class GSystem
         }    
 
         System.out.println("\n");
-
+        
+        CheckReports();
         if (FoundFile())
             PRINTLN(64, "FILE IS SUCCESFULLY LOADED!");
         else 
@@ -191,7 +195,7 @@ public class GSystem
                 else sb.append((char) (randomNumber - 26 + 48));
             }
         
-            for (ArrayList<Object> info : Administration.ORDER_INFO) 
+            for (ArrayList<Object> info : Administration.ORDER_REPORTS) 
             {
                 if (info.get(0).equals(sb)) 
                 { 
@@ -214,7 +218,7 @@ public class GSystem
             {
                 UpdateFile();
                 LoadFile(); 
-                
+
                 return false;
             } 
             else { LoadFile(); }
@@ -304,6 +308,70 @@ public class GSystem
         catch (IOException e) { e.printStackTrace(); }
     }
 
+    protected void CheckReports()   
+    {
+        try { if (!OrderReports.createNewFile()) LoadReports(); } 
+        catch (IOException e) { e.printStackTrace(); }  
+    }
+
+    protected void LoadReports() 
+    {
+        try (BufferedReader reader = new BufferedReader(new FileReader(OrderReports)))
+        {   
+            String line;
+
+            while ((line = reader.readLine()) != null) 
+            {
+                if (line.equals("x")) break;
+                String date         = line;
+                String time         = reader.readLine();
+                String refNum       = reader.readLine();
+                BigDecimal TOTAL    = new BigDecimal(reader.readLine());
+
+                Administration.ORDER_REPORTS.add(new ArrayList<>() 
+                {{
+                    add(date);
+                    add(time);
+                    add(refNum);
+                    add(TOTAL);
+                }});
+            }
+
+            reader.close();
+        } catch (IOException e) { e.printStackTrace(); }    
+    }
+
+    protected void AddToReports(String date, String time, String refNum, BigDecimal TOTAL) 
+    {
+        REPORTS.add(new ArrayList<>()
+        {{
+            add(date);
+            add(time);
+            add(refNum);
+            add(TOTAL);
+        }});
+
+        UpdateReports();
+    }
+    
+    protected void UpdateReports() 
+    {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(OrderReports)))
+        {
+            for (ArrayList<Object> report : REPORTS) 
+            {
+                for (Object line : report) 
+                {
+                    writer.write(String.valueOf(line) + "\n");
+                }
+            }
+            
+            writer.write("x");
+            writer.close();
+        } 
+        catch (IOException e) { e.printStackTrace(); }
+    }
+
     protected void HEADER()
     {
         System.out.println("                                               ___________________________________________________________ ");
@@ -333,6 +401,7 @@ public class GSystem
             case "manage_menu_sandwich" -> System.out.println("00=----------m-m------------------------------------------------=[ M A N A G E   M E N U ]=----=( SANDWICH )=-------------------------------------------=00");  
             case "manage_menu_drinks"   -> System.out.println("00=----------m-m------------------------------------------------=[ M A N A G E   M E N U ]=----=( DRINKS )=---------------------------------------------=00");  
             case "report"               -> System.out.println("00=----------m-m-----------------------------------------------------=[ R E P O R T ]=------------------------------------------------------------------=00");
+            case "exit"                 -> System.out.println("00=----------m-m-------------------------------------------------------=[ E X I T ]=--------------------------------------------------------------------=00");
         }
     }
 }

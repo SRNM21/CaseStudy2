@@ -338,13 +338,17 @@ public class OrderFood
     {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
-        String dateAndTime = now.format(formatter);
+        String DAT = now.format(formatter);
+        String date = DAT.substring(0, 10);
+        String time = DAT.substring(11);
         String refNum = gsystem.GENERATE_REF_NUM();
+        
+        gsystem.AddToReports(date, time, refNum, TOTAL_AMOUNT);
 
-        Administration.ORDER_INFO.add(new ArrayList<>() 
+        Administration.ORDER_REPORTS.add(new ArrayList<>() 
         {{
-            add(dateAndTime.substring(0, 10 ));
-            add(dateAndTime.substring(11));
+            add(date);
+            add(time);
             add(refNum);
             add(TOTAL_AMOUNT);
         }});
