@@ -5,115 +5,138 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ *  The {@code OrderFood} class is where the user select category and pick the food they want to order.
+ * 
+ *  <p>
+ *  This System requires the {@code ITEMS.txt} file to provide user selctions. It reads the file, retrieve the items,
+ *  and display it to the menu. The orders from this class will be pass into the {@code Administration}.
+ *  </p>
+ * 
+ *  @author Neelian Mata
+ *  @author Jarius Maui Pineda
+ *  @author Niño Greg Gregorio
+ *  @since 1.0
+ */
 public class OrderFood 
 {   
+    // class
     private final ErrorHandler erh = new ErrorHandler(); 
     private final GSystem gsystem = new GSystem();
 
+    // cart and amount 
     private ArrayList<ArrayList<Object>> CART;
     private BigDecimal TOTAL_AMOUNT = new BigDecimal(0);
        
+    // where user gets their cart and start choosing items
     OrderFood()
     {
         CART = new ArrayList<>();
         
         while (true)
         {
-            gsystem.CLS();
-            gsystem.HEADER();
-            gsystem.GENERATE_TITLE("order_food");
+            gsystem.cls();
+            gsystem.printHeader();
+            gsystem.generateTitle("order_food");
             System.out.println();
-            gsystem.PRINTLN(50, "[0] - BACK\n");
-            gsystem.PRINTLN(50, "[1] - MY CART\n");
-            gsystem.PRINTLN(50, "[2] - MEALS\n");
-            gsystem.PRINTLN(50, "[3] - SANDWICH\n");
-            gsystem.PRINTLN(50, "[4] - DRINKS\n");
+            gsystem.button(0, "BACK");
+            gsystem.button(1, "MY CART");
+            gsystem.button(2, "MEALS");
+            gsystem.button(3, "SANDWICH");
+            gsystem.button(4, "DRINKS");
             System.out.println();
-            gsystem.PRINT(50,"ENTER CHOICE:  ");
+            gsystem.printLine(55,"ENTER CHOICE");
+            gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
             int cat = erh.getChoice(0, 4);
             
             switch (cat)
             {
                 case 0 -> { return; }
-                case 1 -> MyCart(CART);
-                case 2 -> Order(CART, MainProcess.MEALS_ITEMS,    "order_food_meals");
-                case 3 -> Order(CART, MainProcess.SANDWICH_ITEMS, "order_food_sandwich");
-                case 4 -> Order(CART, MainProcess.DRINKS_ITEMS,   "order_food_drinks");
+                case 1 -> myCart(CART);
+                case 2 -> order(CART, MainProcess.MEALS_ITEMS,    "order_food_meals");
+                case 3 -> order(CART, MainProcess.SANDWICH_ITEMS, "order_food_sandwich");
+                case 4 -> order(CART, MainProcess.DRINKS_ITEMS,   "order_food_drinks");
             }
         }
     }
 
-    private void MyCart(ArrayList<ArrayList<Object>> CART)
+    // check the items on the cart 
+    private void myCart(ArrayList<ArrayList<Object>> CART)
     {
         while (true)
         {
-            gsystem.CLS();
-            gsystem.HEADER();
-            gsystem.GENERATE_TITLE("my_cart");
+            gsystem.cls();
+            gsystem.printHeader();
+            gsystem.generateTitle("my_cart");
             System.out.println(); 
 
+            // display if the cart is empty
             if (CART.isEmpty())
             {
-                gsystem.PRINTLN(62, "THERE ARE NO ITEMS IN THIS CART\n");
+                gsystem.printLine(62, "THERE ARE NO ITEMS IN THIS CART\n");
                 System.out.println();
-                gsystem.GENERATE_TITLE("null");
-                gsystem.PAUSE();
+                gsystem.generateTitle("null");
+                gsystem.pause();
 
                 return;
             }
+            // display items if the cart is not empty
             else
             {
                 String format = "%-7s%-45s%-7s%-12s%n";
-                gsystem.PRINTLN(50, "[0] - BACK\n");
-                gsystem.PRINTLN(50, "[1] - REMOVE ITEM\n");
-                gsystem.PRINTLN(50, "[2] - CHECK OUT\n");
+                gsystem.button(0, "BACK");
+                gsystem.button(1, "REMOVE ITEM");
+                gsystem.button(2, "CHECK OUT");
     
-                gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
-                gsystem.PRINTF(40, format, "CODE", "ITEM", "QTY", "PRICE");
-                gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
+                gsystem.printLine(39, gsystem.fill(75, '-') + gsystem.YEL);
+                gsystem.printFormat(40, format, "CODE", "ITEM", "QTY", "PRICE");
+                gsystem.printLine(39, gsystem.RES + gsystem.fill(75, '-'));
 
                 int counter = 1;
 
+                // display all items quantity and amount
                 for (ArrayList<Object> cartItems : CART) 
                 {   
-                    String item     = cartItems.get(0).toString();
-                    int quantity    = (int) cartItems.get(1);
-                    double amount   = new BigDecimal(cartItems.get(2).toString()).doubleValue();
+                    String item         = cartItems.get(0).toString();
+                    int quantity        = (int) cartItems.get(1);
+                    double amount       = new BigDecimal(cartItems.get(2).toString()).doubleValue();
                     String amountFormat = "Php " + amount;
 
                     if (item.length() > 32) 
                     {
-                        ArrayList<String> multiLine = gsystem.MULTILINE(item, 42);
+                        ArrayList<String> multiLine = gsystem.wrapText(item, 42);
 
-                        gsystem.PRINTF(40, format, counter++, multiLine.get(0), quantity, amountFormat);
+                        gsystem.printFormat(40, format, counter++, multiLine.get(0), quantity, amountFormat);
                         
                         for (int i = 1; i < multiLine.size(); i++)
-                            gsystem.PRINTF(40, format, "", multiLine.get(i), "", "");
+                            gsystem.printFormat(40, format, "", multiLine.get(i), "", "");
                     } 
                     else 
                     {
-                        gsystem.PRINTF(40, format, counter++, item, quantity, amountFormat);
+                        gsystem.printFormat(40, format, counter++, item, quantity, amountFormat);
                     }
                 }
-                gsystem.PRINTLN(39, gsystem.FILL(75, '-'));
                 
+                gsystem.printLine(39, gsystem.fill(75, '-'));
                 System.out.println();
-                gsystem.PRINTLN(50, "TOTAL AMOUNT:  " + TOTAL_AMOUNT.setScale(2, RoundingMode.DOWN) + "\n");
+                gsystem.printLine(50, gsystem.YEL + "TOTAL AMOUNT" + gsystem.RES + ":  " + TOTAL_AMOUNT.setScale(2, RoundingMode.DOWN) + "\n");
                 System.out.println();
-                gsystem.PRINT(50, "ENTER CHOICE:  ");
+                gsystem.printLine(55,"ENTER CHOICE");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 int mc = erh.getChoice(0, 2);
         
                 switch (mc)
                 {
                     case 0 -> { return; }
-                    case 1 -> RemoveToCart(CART);
-                    case 2 -> CheckOut(CART);
+                    case 1 -> removeToCart(CART);
+                    case 2 -> checkOut(CART);
                 }
             }
         }
     }
 
-    private void Order(ArrayList<ArrayList<Object>> CART, HashMap<String, Double> MENU, String CAT) 
+    // provide user selction of items
+    private void order(ArrayList<ArrayList<Object>> CART, HashMap<String, Double> MENU, String CAT) 
     {
         boolean orderAgain;
 
@@ -122,53 +145,57 @@ public class OrderFood
             orderAgain = false;
             int od = 0;
 
-            gsystem.CLS();
-            gsystem.HEADER();
-            gsystem.GENERATE_TITLE(CAT);
+            gsystem.cls();
+            gsystem.printHeader();
+            gsystem.generateTitle(CAT);
             System.out.println();
-            gsystem.PRINTLN(50, "[0] - CANCEL\n");
+            gsystem.button(0, "CANCEL");
 
+            // display if the category's menu is empty
             if (MENU.isEmpty())
             {
-                gsystem.PRINTLN(50, "THERE ARE NO ITEMS IN THIS MENU\n");
+                gsystem.printLine(50, "THERE ARE NO ITEMS IN THIS MENU\n");
                 System.out.println();
-                gsystem.PRINT(50, "ENTER CHOICE:  ");
+                gsystem.printLine(55,"ENTER CHOICE");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 od = erh.getChoice(0, 0);
             }
+            // display items if the category's menu is not empty
             else
             {
                 String format = "%-7s%-64s%-12s%n";
 
-                gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
-                gsystem.PRINTF(35, format, "CODE", "ITEM", "PRICE");
-                gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
+                gsystem.printLine(34, gsystem.fill(87, '-') + gsystem.YEL);
+                gsystem.printFormat(35, format, "CODE", "ITEM", "PRICE");
+                gsystem.printLine(34, gsystem.RES + gsystem.fill(87, '-'));
                 int counter = 1;
 
+                // display all category's menu items and their price
                 for (String item : MENU.keySet()) 
                 {
                     double price = MENU.get(item);
-
                     String priceFormat = "Php " + price;
                     
                     if (item.length() > 32) 
                     {
-                        ArrayList<String> multiLine = gsystem.MULTILINE(item, 64);
+                        ArrayList<String> multiLine = gsystem.wrapText(item, 64);
 
-                        gsystem.PRINTF(35, format, counter++, multiLine.get(0), priceFormat);
+                        gsystem.printFormat(35, format, counter++, multiLine.get(0), priceFormat);
                         
                         for (int i = 1; i < multiLine.size(); i++)
-                            gsystem.PRINTF(35, format, "", multiLine.get(i), "");
+                            gsystem.printFormat(35, format, "", multiLine.get(i), "");
                     } 
                     else 
                     {
-                        gsystem.PRINTF(35, format, counter++, item, priceFormat);
+                        gsystem.printFormat(35, format, counter++, item, priceFormat);
                     }
                 }
 
-                gsystem.PRINTLN(34, gsystem.FILL(87, '-'));
-                
+                // get the item's code
+                gsystem.printLine(34, gsystem.fill(87, '-'));
                 System.out.println();
-                gsystem.PRINT(50, "ENTER CODE OF YOUR DESIRED MENU ITEM:  ");
+                gsystem.printLine(55, "ENTER CODE OF YOUR DESIRED MENU ITEM");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 od = erh.getChoice(0, MENU.size());
 
             }
@@ -176,47 +203,55 @@ public class OrderFood
             switch (od)
             {
                 case 0  -> { return; }
-                default -> orderAgain = AddToCart(CART, MENU, od);
+                default -> orderAgain = addToCart(CART, MENU, od);
             }
         }
         while (orderAgain);
     }
 
-    private boolean AddToCart(ArrayList<ArrayList<Object>> CART, HashMap<String, Double> MENU, int itemID) 
+    // function that will add item to the cart
+    private boolean addToCart(ArrayList<ArrayList<Object>> CART, HashMap<String, Double> MENU, int itemID) 
     {
         String item = MENU.keySet().toArray()[itemID - 1].toString();
 
         System.out.println();
-        gsystem.PRINT(50, "ENTER QUANTITY:  ");
+        gsystem.printLine(55, "ENTER QUANTITY");
+        gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
         int quantity = erh.getQuantity();
 
         double price = MENU.get(item);
 
         System.out.println();
-        gsystem.PRINTLN(44, gsystem.FILL(66, '='));
+        gsystem.printLine(44, gsystem.fill(66, '='));
 
+        // dsplay item's information
         if (item.length() > 32)
         {
-            ArrayList<String> lines = gsystem.MULTILINE(item, 53);
-            gsystem.PRINTLN(45, "ITEM    :  " + lines.get(0));
+            ArrayList<String> lines = gsystem.wrapText(item, 53);
+            
+            gsystem.printLine(45, gsystem.YEL + "ITEM" + gsystem.RES + "    :  " + lines.get(0));
 
             for (int i = 1; i < lines.size(); i++) 
-                gsystem.PRINTLN(45, gsystem.FILL(11, ' ') + lines.get(i));
+                gsystem.printLine(45, gsystem.fill(11, ' ') + lines.get(i));
         }
-        else { gsystem.PRINTLN(45, "ITEM    :  " + item); }
+        else 
+        { 
+            gsystem.printLine(45, gsystem.YEL + "ITEM" + gsystem.RES + "    :  " + item); 
+        }
 
-        gsystem.PRINTLN(45, "PRICE   :  " + "Php " + price);
-        gsystem.PRINTLN(45, "QUANTITY:  " + quantity + "x");
-        gsystem.PRINTLN(44, gsystem.FILL(66, '='));
+        gsystem.printLine(45, gsystem.YEL + "PRICE" + gsystem.RES + "   :  " + "Php " + price);
+        gsystem.printLine(45, gsystem.YEL + "QUANTITY" + gsystem.RES + ":  " + quantity + "x");
+        gsystem.printLine(44, gsystem.fill(66, '='));
         System.out.println();
         
-        gsystem.PRINT(50, "ARE YOU SURE YOU WANT TO ADD THIS ITEM? (y/n):  ");
+        gsystem.printLine(55, "ARE YOU SURE YOU WANT TO ADD THIS ITEM? (y/n)");
+        gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
         boolean confirmAdd = erh.getConfirmation();
 
+        // add item to cart if confirmed
         if (confirmAdd)
         {
             BigDecimal pr = new BigDecimal(Double.toString(price));
-            
             BigDecimal amount = pr.multiply(new BigDecimal(quantity));
             TOTAL_AMOUNT = TOTAL_AMOUNT.add(amount);
             
@@ -228,122 +263,150 @@ public class OrderFood
             }});
             
             System.out.println();
-            gsystem.PRINTLN(60, "ITEM HAS BEEN PLACED SUCCESSFULLY!");
+            gsystem.printLine(60, "ITEM HAS BEEN PLACED SUCCESSFULLY!");
         }
+        // otherwise, cancel adding item to cart
         else 
         {
             System.out.println();
-            gsystem.PRINT(50, "DO YOU WANT TO ORDER OTHER ITEM INSTEAD? (y/n):  ");
+            gsystem.printLine(50, "DO YOU WANT TO ORDER OTHER ITEM INSTEAD? (y/n)");
+            gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
             boolean confirm = erh.getConfirmation();
 
             if (confirm) return true;
         }    
 
-        gsystem.GENERATE_TITLE("null");
-        gsystem.PAUSE();
+        gsystem.generateTitle("null");
+        gsystem.pause();
         return false;
     }
 
-    private void RemoveToCart(ArrayList<ArrayList<Object>> CART) 
+    // function that will remove item to the cart
+    private void removeToCart(ArrayList<ArrayList<Object>> CART) 
     {
         System.out.println();
-        gsystem.PRINT(50, "GIVE THE ITEM CODE THAT YOU WANT TO REMOVE:  ");
+        gsystem.printLine(50, "GIVE THE ITEM CODE THAT YOU WANT TO REMOVE");
+        gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
         int rc = erh.getChoice(0, CART.size());
 
+        // find the item's code
         switch (rc)
         {
             case 0 -> { return; }
             default -> 
             {
-                String item = CART.get(rc - 1).get(0).toString();
-                int quantity = (int) CART.get(rc - 1).get(1);
-                double amount = new BigDecimal(CART.get(rc - 1).get(2).toString()).doubleValue();
+                // display item, quantity, and its amount
+                String item     = CART.get(rc - 1).get(0).toString();
+                int quantity    = (int) CART.get(rc - 1).get(1);
+                double amount   = new BigDecimal(CART.get(rc - 1).get(2).toString()).doubleValue();
 
                 System.out.println();
-                gsystem.PRINTLN(44, gsystem.FILL(66, '='));
+                gsystem.printLine(44, gsystem.fill(66, '='));
 
                 if (item.length() > 32)
                 {
-                    ArrayList<String> lines = gsystem.MULTILINE(item, 52);
-                    gsystem.PRINTLN(45, "ITEM    :  " + lines.get(0));
+                    ArrayList<String> lines = gsystem.wrapText(item, 52);
+                    gsystem.printLine(45, gsystem.YEL + "ITEM" + gsystem.RES + "    :  " + lines.get(0));
+
                     for (int i = 1; i < lines.size(); i++) 
-                    gsystem.PRINTLN(45, gsystem.FILL(11, ' ') + lines.get(i));
+                        gsystem.printLine(45, gsystem.fill(11, ' ') + lines.get(i));
                 }
-                else { gsystem.PRINTLN(45, "ITEM    :  " + item); }
+                else 
+                { 
+                    gsystem.printLine(45, gsystem.YEL + "ITEM" + gsystem.RES + "    :  " + item); 
+                }
         
-                gsystem.PRINTLN(45, "QUANTITY:  " + quantity + "x");
-                gsystem.PRINTLN(45, "AMOUNT  :  " + "Php " + amount);
-                gsystem.PRINTLN(44, gsystem.FILL(66, '='));
+                gsystem.printLine(45, gsystem.YEL + "QUANTITY" + gsystem.RES + ":  " + quantity + "x");
+                gsystem.printLine(45, gsystem.YEL + "AMOUNT" + gsystem.RES + "  :  " + "Php " + amount);
+                gsystem.printLine(44, gsystem.fill(66, '='));
 
                 System.out.println();
-                gsystem.PRINT(45, "ARE YOU SURE YOU WANT TO REMOVE THIS ITEM? (y/n):  ");
+                gsystem.printLine(45, "ARE YOU SURE YOU WANT TO REMOVE THIS ITEM? (y/n)");
+                gsystem.prints(45, gsystem.GRE + ">> " + gsystem.RES);
                 boolean confirm = erh.getConfirmation();
-
                 System.out.println();
+
+                // remove item if confirmed
                 if (confirm)
                 {
                     CART.remove(rc - 1); 
                     TOTAL_AMOUNT = TOTAL_AMOUNT.subtract(new BigDecimal(amount));
-                    gsystem.PRINTLN(60, "ITEM HAS BEEN REMOVED SUCCESSFULLY!");
+                    gsystem.printLine(60, "ITEM HAS BEEN REMOVED SUCCESSFULLY!");
                 }
+                // otherwise, cancel removing item to cart
                 else 
                 {  
-                    gsystem.PRINTLN(55, "ITEM REMOVAL HAS BEEN CANCELLED SUCCESSFULLY!");
+                    gsystem.printLine(55, "ITEM REMOVAL HAS BEEN CANCELLED SUCCESSFULLY!");
                 }
             }
         }
 
-        gsystem.GENERATE_TITLE("null");
-        gsystem.PAUSE();
+        gsystem.generateTitle("null");
+        gsystem.pause();
     }
 
-    private void CheckOut(ArrayList<ArrayList<Object>> CART)
+    // function where user check out their items
+    private void checkOut(ArrayList<ArrayList<Object>> CART)
     {
         System.out.println();
-        gsystem.PRINT(50, "DO YOU HAVE SENIOR CITIZEN ID / PWD ID (y/n):  ");
+        gsystem.printLine(55, "DO YOU HAVE SENIOR CITIZEN ID / PWD ID (y/n)");
+        gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
         boolean haveDiscount = erh.getConfirmation();
+
+        // give discount if the customer is senior/pwd
         BigDecimal discountPercent = new BigDecimal(haveDiscount ? 0.20 : 0);
-        
         BigDecimal DISCOUNT = TOTAL_AMOUNT.multiply(discountPercent);
         BigDecimal TOTAL_AMOUNT_DIS = TOTAL_AMOUNT.subtract(DISCOUNT);
 
+        // display customer's order information
         System.out.println();
-        gsystem.PRINTLN(44, gsystem.FILL(66, '='));
-        gsystem.PRINTLN(45, "AMOUNT      :  Php " + TOTAL_AMOUNT.setScale(2, RoundingMode.DOWN));
-        gsystem.PRINTLN(45, "DISCOUNT    :  Php " + DISCOUNT.setScale(2, RoundingMode.DOWN));
-        gsystem.PRINTLN(45, "TOTAL AMOUNT:  Php " + TOTAL_AMOUNT_DIS.setScale(2, RoundingMode.HALF_UP));
-        gsystem.PRINTLN(44, gsystem.FILL(66, '='));
+        gsystem.printLine(44, gsystem.fill(66, '='));
+        gsystem.printLine(45, gsystem.YEL + "AMOUNT" + gsystem.RES + "      :  Php " + TOTAL_AMOUNT.setScale(2, RoundingMode.DOWN));
+        gsystem.printLine(45, gsystem.YEL + "DISCOUNT" + gsystem.RES + "    :  Php " + DISCOUNT.setScale(2, RoundingMode.DOWN));
+        gsystem.printLine(45, gsystem.YEL + "TOTAL AMOUNT" + gsystem.RES + ":  Php " + TOTAL_AMOUNT_DIS.setScale(2, RoundingMode.HALF_UP));
+        gsystem.printLine(44, gsystem.fill(66, '='));
+        System.out.println();
 
-        System.out.println();
-        gsystem.PRINT(50, "CHECK OUT? (y/n):  ");
+        gsystem.printLine(55, "CHECK OUT? (y/n)");
+        gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
         boolean checkout = erh.getConfirmation();
-
         System.out.println();
+        
+        // clear out the cart
         if (checkout)
         {
-            SaveOrderInfo();
+            TOTAL_AMOUNT = TOTAL_AMOUNT_DIS;
+
+            saveOrderInfo();
 
             TOTAL_AMOUNT = new BigDecimal(0);
             CART.clear();
 
-            gsystem.PRINTLN(65, "CHECKED OUT SUCCESSFULLY!");
+            gsystem.printLine(65, "CHECKED OUT SUCCESSFULLY!");
         }
-        else { gsystem.PRINTLN(61, "CHECK OUT CANCELLED SUCCESSFULLY!"); }
+        // otherwise, cancel check out
+        else 
+        { 
+            gsystem.printLine(61, "CHECK OUT CANCELLED SUCCESSFULLY!"); 
+        }
 
-        gsystem.GENERATE_TITLE("null");
-        gsystem.PAUSE();
+        gsystem.generateTitle("null");
+        gsystem.pause();
     }
 
-    protected void SaveOrderInfo()
+    // function to save users order information
+    protected void saveOrderInfo()
     {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
-        String DAT = now.format(formatter);
+
+        String DAT  = now.format(formatter);
         String date = DAT.substring(0, 10);
         String time = DAT.substring(11);
-        String refNum = gsystem.GENERATE_REF_NUM();
+
+        String refNum = gsystem.generateRefNum();
         
-        gsystem.AddToReports(date, time, refNum, TOTAL_AMOUNT);
+        gsystem.addToReports(date, time, refNum, TOTAL_AMOUNT);
 
         Administration.ORDER_REPORTS.add(new ArrayList<>() 
         {{

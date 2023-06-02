@@ -1,46 +1,69 @@
 import java.util.HashMap;
 
+/**
+ *  The {@code MainProcess} class is the main menu of the system. Loop the flow until the user exits from it.
+ * 
+ *  <p>
+ *  This is where the items are stored and manipulated. When called, this class will load the item and reports from
+ *  {@code ITEMS.txt} and {@code REPORTS.txt}.
+ *  </p>
+ * 
+ *  @author Neelian Mata
+ *  @author Jarius Maui Pineda
+ *  @author Niño Greg Gregorio
+ *  @since 1.0
+ */
 public class MainProcess 
 {
+    // retrieved items from the file
     protected static HashMap<String, Double> MEALS_ITEMS      = new HashMap<>();
     protected static HashMap<String, Double> SANDWICH_ITEMS   = new HashMap<>();
     protected static HashMap<String, Double> DRINKS_ITEMS     = new HashMap<>();
 
+    // class
     private static final ErrorHandler erh = new ErrorHandler();
     private static final GSystem gsystem = new GSystem();
 
+    // run the MainProcess thru main function if the system is not ran in Windows Command Prompt
     public static void main(String[] args) { new MainProcess(); }   
     
+    // run the MainProcess Constructor if the System is ran in Windows Command Prompt
     MainProcess() 
     {
-        gsystem.LOADING();
-        gsystem.PAUSE();
-        gsystem.CLS();
+        gsystem.load();
+        gsystem.pause();
+        gsystem.cls();
 
+        // loop the System's flow until the user exit
         boolean running = true;
         while (running) running = MainMenu();
 
-        gsystem.CLS();
-        gsystem.HEADER();
-        gsystem.GENERATE_TITLE("exit");
+        // prints when the user exit
+        gsystem.cls();
+        gsystem.printHeader();
+        gsystem.generateTitle("exit");
+
         System.out.println("\n\n");
-        gsystem.PRINTLN(62,"THANK YOU FOR USING OUR SYSTEM!");
+        gsystem.printLine(62,"THANK YOU FOR USING OUR SYSTEM!");
         System.out.println("\n\n");
-        gsystem.GENERATE_TITLE("null");
-        gsystem.PAUSE();
+        
+        gsystem.generateTitle("null");
+        gsystem.pause();
     }
 
+    // menu of the system
     private boolean MainMenu()
     {
-        gsystem.CLS();
-        gsystem.HEADER();
-        gsystem.GENERATE_TITLE("main_menu");
+        gsystem.cls();
+        gsystem.printHeader();
+        gsystem.generateTitle("main_menu");
         System.out.println();
-        gsystem.PRINTLN(50,"[1] - ORDER FOOD\n");
-        gsystem.PRINTLN(50,"[2] - ADMINISTRATION\n");
-        gsystem.PRINTLN(50,"[3] - EXIT\n");
+        gsystem.button(1, "ORDER FOOD");
+        gsystem.button(2, "ADMINISTRATION");
+        gsystem.button(3, "EXIT");
         System.out.println();
-        gsystem.PRINT(50,"ENTER CHOICE:  ");
+        gsystem.printLine(55,"ENTER CHOICE");
+        gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
         int mm = erh.getChoice(1, 3);
     
         switch (mm)

@@ -3,16 +3,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Error Handler implements {@link InputStreamReader} as a line reader 
- * and wrapping it to a {@link  BufferedReader} to handle user's invalid 
- * inputs and provide them a chance to re-input.
+ *  The {@code Error Handler} class implements {@link InputStreamReader} class as a line reader 
+ *  and wrapping it to a {@link  BufferedReader} class to handle user's invalid 
+ *  inputs and provide them a chance to re-input.
  * 
- * @author GREGORIO-MATA-PINEDA
- * @since 1.0
+ *  @author Neelian Mata
+ *  @author Jarius Maui Pineda
+ *  @author Niño Greg Gregorio
+ *  @since 1.0
  */
 public class ErrorHandler 
 {   
-    private final GSystem gsystem = new GSystem();
+    // class and imports
+    private final GSystem gsystem = new GSystem(); 
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));   
     
     /**
@@ -28,23 +31,28 @@ public class ErrorHandler
     protected int getChoice(int origin, int bound) 
     {
         final String INVALID = "INVALID INPUT, PLEASE ENTER NUMBER BETWEEN " 
-            + origin + " AND " + bound + ":  ";
+            + gsystem.YEL + origin + gsystem.RES + " AND " + gsystem.YEL + bound + gsystem.RES;
         
+        // get valid input
         while (true) 
         {
             String input = null;
 
-            try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(50, INVALID); } 
-            
-            try  
-            {
+            try 
+            { 
+                input = br.readLine(); 
                 int i = Integer.parseInt(input);
                 
+                // return the input if its between or equal to origin and bound
                 if (i >= origin && i <= bound) return i;
-                else gsystem.PRINT(50,INVALID);
+                // otherwise, throw exception
+                else throw new NumberFormatException();
             } 
-            catch (NumberFormatException e) { gsystem.PRINT(50,INVALID); }
+            catch (NumberFormatException | IOException e) 
+            { 
+                gsystem.printLine(55, INVALID); 
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
+            }
         }
     }
 
@@ -55,23 +63,27 @@ public class ErrorHandler
      */
     protected double getAmount() 
     {
-        final String INVALID = "INVALID INPUT, PLEASE ENTER VALID AMOUNT:  ";
+        final String INVALID = "INVALID INPUT, PLEASE ENTER VALID AMOUNT";
 
         double price = 0;
         boolean invalid;
         
+        // get valid input
         do
         {
             String input = null;
             invalid = false;
 
-            try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
-            
-            try { price = Double.parseDouble(input); } 
-            catch (NumberFormatException e) 
+            try 
+            { 
+                input = br.readLine(); 
+                price = Double.parseDouble(input); 
+                // throws exception if the input contains invalid characters
+            } 
+            catch (NumberFormatException | IOException e) 
             {  
-                gsystem.PRINT(50,INVALID);
+                gsystem.printLine(50, INVALID);
+                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
                 invalid = true;
             }
         }
@@ -87,32 +99,30 @@ public class ErrorHandler
      */
     protected int getQuantity() 
     {
-        final String INVALID = "INVALID INPUT, MIN = 0, MAX = 999:  ";
+        final String INVALID = "INVALID INPUT, MINIMUM IS 0 AND MAXIMUM IS 999";
 
         int quantity = 0;
         boolean invalid;
         
+        // get valid input
         do
         {
             String input = null;
             invalid = false;
 
-            try { input = br.readLine(); } 
-            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
-            
             try 
             {
+                input = br.readLine();
                 quantity = Integer.parseInt(input); 
 
-                if (quantity <= 0 || quantity >= 999) 
-                {
-                    gsystem.PRINT(50,INVALID);
-                    invalid = true; 
-                }
+                // throws exception if the input contains invalid characters 
+                // or the input is 0 or 1000 or more
+                if (quantity <= 0 || quantity >= 999) throw new IOException();
             } 
-            catch (NumberFormatException e) 
+            catch (NumberFormatException | IOException e) 
             {  
-                gsystem.PRINT(50,INVALID);
+                gsystem.printLine(50,INVALID);
+                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
                 invalid = true;
             }
         }
@@ -128,11 +138,12 @@ public class ErrorHandler
      */
     protected boolean getConfirmation()
     {
-        final String INVALID = "INVALID INPUT, PLEASE ENTER 'y' OR 'n':  ";
+        final String INVALID = "INVALID INPUT, PLEASE ENTER 'y' OR 'n'";
 
         boolean invalid;
         String input;
 
+        // get valid input
         do
         {
             invalid = false;
@@ -141,18 +152,20 @@ public class ErrorHandler
             { 
                 input = br.readLine();
 
+                // check if the input is 'y' or 'n' 
                 switch (input)
                 {
                     case "y" -> { return true; }
                     case "n" -> { return false; }
-                    default ->
-                    {
-                        gsystem.PRINT(50,INVALID);
-                        invalid = true;
-                    }
+                    default  -> throw new IOException();
                 }
             } 
-            catch (IOException e) { gsystem.PRINT(50,INVALID); } 
+            catch (IOException e) 
+            { 
+                gsystem.printLine(50,INVALID);
+                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                invalid = true;
+            } 
         }
         while (invalid);
 

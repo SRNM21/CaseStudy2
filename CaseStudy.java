@@ -5,17 +5,19 @@
  *  @author Neelian Mata
  *  @author Jarius Maui Pineda
  *  @author Niño Greg Gregorio
+ *  @since 1.0
  */
 public class CaseStudy  
 {   
     /*
         ! RUN THE SYSTEM
         ! 2 SEC DELAY AFTER RUNNING
+        ! AUTOMATICALLY RUN TO COMMAND PROMPT (IN WINDOWS)
     */
     public static void main(String[] args)
     {
         if (System.getProperty("os.name").contains("Windows")) 
-            new GSystem().START_SYSTEM();
+            new GSystem().startSystem();
         else 
             new MainProcess();
     }
