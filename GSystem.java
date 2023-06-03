@@ -46,7 +46,7 @@ public class GSystem extends Color
         add(new HashMap<>()
         {{
             put("Fried Chicken Sandwich", "50.80");
-            put("Vegan Sandwich", "40.10a"); 
+            put("Vegan Sandwich", "40.10"); 
             put("Egg Sandwich", "29.99");
         }});
 
