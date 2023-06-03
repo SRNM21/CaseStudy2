@@ -26,10 +26,11 @@ public class MainProcess
 
     // run the MainProcess thru main function if the system is not ran in Windows Command Prompt
     public static void main(String[] args) { new MainProcess(); }   
-    
+        
     // run the MainProcess Constructor if the System is ran in Windows Command Prompt
     MainProcess() 
     {
+
         gsystem.load();
         gsystem.pause();
         gsystem.cls();
