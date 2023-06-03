@@ -407,13 +407,5 @@ public class OrderFood
         String refNum = gsystem.generateRefNum();
         
         gsystem.addToReports(date, time, refNum, TOTAL_AMOUNT);
-
-        Administration.ORDER_REPORTS.add(new ArrayList<>() 
-        {{
-            add(date);
-            add(time);
-            add(refNum);
-            add(TOTAL_AMOUNT);
-        }});
     }
 }

@@ -33,7 +33,6 @@ public class GSystem extends Color
     private final File OrderReports = new File("REPORTS.txt");
 
     // contents
-    private ArrayList<ArrayList<Object>> REPORTS = new ArrayList<>();
     private ArrayList<HashMap<String, String>> ORIGINAL_ITEMS = new ArrayList<>()
     {{
         add(new HashMap<>()
@@ -467,7 +466,7 @@ public class GSystem extends Color
     // function to dynamically add reports to the file 
     protected void addToReports(String date, String time, String refNum, BigDecimal TOTAL) 
     {
-        REPORTS.add(new ArrayList<>()
+        Administration.ORDER_REPORTS.add(new ArrayList<>()
         {{
             add(date);
             add(time);
@@ -484,7 +483,7 @@ public class GSystem extends Color
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(OrderReports)))
         {
             // re-write all dynamically added reports to the reports file
-            for (ArrayList<Object> report : REPORTS) 
+            for (ArrayList<Object> report : Administration.ORDER_REPORTS) 
                 for (Object line : report) 
                     writer.write(String.valueOf(line) + "\n");
             
