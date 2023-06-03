@@ -82,8 +82,8 @@ public class ErrorHandler
             } 
             catch (NumberFormatException | IOException e) 
             {  
-                gsystem.printLine(50, INVALID);
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, INVALID);
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 invalid = true;
             }
         }
@@ -121,8 +121,8 @@ public class ErrorHandler
             } 
             catch (NumberFormatException | IOException e) 
             {  
-                gsystem.printLine(50,INVALID);
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55,INVALID);
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 invalid = true;
             }
         }
@@ -162,8 +162,8 @@ public class ErrorHandler
             } 
             catch (IOException e) 
             { 
-                gsystem.printLine(50,INVALID);
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55,INVALID);
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 invalid = true;
             } 
         }

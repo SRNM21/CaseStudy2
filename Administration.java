@@ -126,14 +126,14 @@ public class Administration
             try 
             {
                 // get the item's name
-                gsystem.printLine(50, "ENTER DESIRED ITEM THAT YOU WANT TO ADD ON THIS MENU  "); 
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, "ENTER DESIRED ITEM THAT YOU WANT TO ADD ON THIS MENU  "); 
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 item = br.readLine();
     
                 // get the item's price
                 System.out.println();
-                gsystem.printLine(50, "ENTER ITEM'S AMOUNT:  ");
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, "ENTER ITEM'S AMOUNT:  ");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 price = erh.getAmount();
             } 
             catch (IOException e) 
@@ -146,9 +146,9 @@ public class Administration
             // ask to add other item if the given item exist in the selected category
             if (MAP.containsKey(item))
             {
-                gsystem.printLine(50, "THIS ITEM IS ALREADY EXIST");
-                gsystem.printLine(50, "DO YOU WANT TO ADD OTHER ITEM INSTEAD? (y/n)");
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, "THIS ITEM IS ALREADY EXIST");
+                gsystem.printLine(55, "DO YOU WANT TO ADD OTHER ITEM INSTEAD? (y/n)");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 runAgain = erh.getConfirmation();
             }
             // otherwise, confirm the admin before adding it to the category's menu
@@ -159,8 +159,8 @@ public class Administration
                 gsystem.printLine(45, gsystem.YEL + "PRICE" + gsystem.RES + "       :  Php " + price);
                 gsystem.printLine(44, gsystem.fill(66, '='));
                 System.out.println();
-                gsystem.printLine(50, "ARE YOU SURE TO ADD THIS ITEM? (y/n)");
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, "ARE YOU SURE TO ADD THIS ITEM? (y/n)");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 boolean confirm = erh.getConfirmation();
 
                 System.out.println();
@@ -196,12 +196,13 @@ public class Administration
             gsystem.cls();
             gsystem.printHeader();
             gsystem.generateTitle(CAT); 
+            System.out.println();
 
             try
             {
                 // get the item's name
-                gsystem.printLine(50, "ENTER ITEM THAT YOU WANT TO DELETE");
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, "ENTER ITEM THAT YOU WANT TO DELETE");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 item = br.readLine();
             } 
             catch (IOException e) 
@@ -214,11 +215,13 @@ public class Administration
             // display the given item's name and price and confirm to the admin if the item exist in the category
             if (MAP.containsKey(item))
             {
-                gsystem.printLine(50, gsystem.YEL + "ITEM" + gsystem.RES + "        :  " + item);
-                gsystem.printLine(50, gsystem.YEL + "PRICE" + gsystem.RES + "       :  Php " + MAP.get(item));
+                gsystem.printLine(44, gsystem.fill(66, '='));
+                gsystem.printLine(45, gsystem.YEL + "ITEM" + gsystem.RES + "        :  " + item);
+                gsystem.printLine(45, gsystem.YEL + "PRICE" + gsystem.RES + "       :  Php " + MAP.get(item));
+                gsystem.printLine(44, gsystem.fill(66, '='));
                 System.out.println();
-                gsystem.printLine(50, "ARE YOU SURE TO DELETE THIS ITEM? (y/n)");
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, "ARE YOU SURE TO DELETE THIS ITEM? (y/n)");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 boolean confirm = erh.getConfirmation();
 
                 if (confirm)
@@ -235,9 +238,9 @@ public class Administration
             // otherwise, display that the given item does not exist and ask the admin to delete other item instead
             else 
             { 
-                gsystem.printLine(50, "ITEM DOES NOT EXIST");
-                gsystem.printLine(50, "DO YOU WANT TO DELETE OTHER ITEM INSTEAD? (y/n)");
-                gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, "ITEM DOES NOT EXIST");
+                gsystem.printLine(55, "DO YOU WANT TO DELETE OTHER ITEM INSTEAD? (y/n)");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 runAgain = erh.getConfirmation();
             }
         }

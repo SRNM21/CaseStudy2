@@ -129,7 +129,7 @@ public class OrderFood
                 {
                     case 0 -> { return; }
                     case 1 -> removeToCart(CART);
-                    case 2 -> checkOut(CART);
+                    case 2 -> { checkOut(CART); return;}
                 }
             }
         }
@@ -269,8 +269,8 @@ public class OrderFood
         else 
         {
             System.out.println();
-            gsystem.printLine(50, "DO YOU WANT TO ORDER OTHER ITEM INSTEAD? (y/n)");
-            gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+            gsystem.printLine(55, "DO YOU WANT TO ORDER OTHER ITEM INSTEAD? (y/n)");
+            gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
             boolean confirm = erh.getConfirmation();
 
             if (confirm) return true;
@@ -285,8 +285,8 @@ public class OrderFood
     private void removeToCart(ArrayList<ArrayList<Object>> CART) 
     {
         System.out.println();
-        gsystem.printLine(50, "GIVE THE ITEM CODE THAT YOU WANT TO REMOVE");
-        gsystem.prints(50, gsystem.GRE + ">> " + gsystem.RES);
+        gsystem.printLine(55, "GIVE THE ITEM CODE THAT YOU WANT TO REMOVE");
+        gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
         int rc = erh.getChoice(0, CART.size());
 
         // find the item's code
@@ -321,8 +321,8 @@ public class OrderFood
                 gsystem.printLine(44, gsystem.fill(66, '='));
 
                 System.out.println();
-                gsystem.printLine(45, "ARE YOU SURE YOU WANT TO REMOVE THIS ITEM? (y/n)");
-                gsystem.prints(45, gsystem.GRE + ">> " + gsystem.RES);
+                gsystem.printLine(55, "ARE YOU SURE YOU WANT TO REMOVE THIS ITEM? (y/n)");
+                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
                 boolean confirm = erh.getConfirmation();
                 System.out.println();
 
@@ -376,12 +376,15 @@ public class OrderFood
         if (checkout)
         {
             TOTAL_AMOUNT = TOTAL_AMOUNT_DIS;
+            String refNum = gsystem.generateRefNum();
 
-            saveOrderInfo();
+            saveOrderInfo(refNum);
 
             TOTAL_AMOUNT = new BigDecimal(0);
             CART.clear();
 
+            gsystem.printLine(61, "REFERENCE NUMBER:  " + gsystem.GRE + refNum + gsystem.RES);
+            System.out.println();
             gsystem.printLine(65, "CHECKED OUT SUCCESSFULLY!");
         }
         // otherwise, cancel check out
@@ -395,7 +398,7 @@ public class OrderFood
     }
 
     // function to save users order information
-    protected void saveOrderInfo()
+    protected void saveOrderInfo(String refNum)
     {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
@@ -403,8 +406,6 @@ public class OrderFood
         String DAT  = now.format(formatter);
         String date = DAT.substring(0, 10);
         String time = DAT.substring(11);
-
-        String refNum = gsystem.generateRefNum();
         
         gsystem.addToReports(date, time, refNum, TOTAL_AMOUNT);
     }
