@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,14 +15,9 @@ import java.util.HashMap;
  *  @author Niño Greg Gregorio
  *  @since 1.0
  */
-public class Administration 
+public class Administration extends ErrorHandler
 {    
-    // class
-    private final ErrorHandler erh   = new ErrorHandler();
-    private final GSystem gsystem = new GSystem();
-
-    // imports and orders report
-    private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));  
+    // reports
     protected static ArrayList<ArrayList<Object>> ORDER_REPORTS = new ArrayList<>();
 
     // display admin menu
@@ -33,17 +25,17 @@ public class Administration
     {
         while (true)
         {
-            gsystem.cls();
-            gsystem.printHeader();
-            gsystem.generateTitle("administration");
-            System.out.println();
-            gsystem.button(0, "BACK");
-            gsystem.button(1, "MANAGE MENU");
-            gsystem.button(2, "REPORT");
-            System.out.println();
-            gsystem.printLine(55,"ENTER CHOICE");
-            gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-            int ad = erh.getChoice(0, 2);
+            cls();
+            printHeader();
+            generateTitle("administration");
+            line();
+            button(0, "BACK");
+            button(1, "MANAGE MENU");
+            button(2, "REPORT");
+            line();
+            printLine(55, WHI + "ENTER CHOICE" + RES);
+            pointer();
+            int ad = getChoice(0, 2);
 
             switch (ad)
             {
@@ -59,26 +51,26 @@ public class Administration
     {
         while (true)
         {
-            gsystem.cls();
-            gsystem.printHeader();
-            gsystem.generateTitle("manage_menu");
-            System.out.println();
-            gsystem.button(0, "BACK");
-            gsystem.button(1, "MEALS");
-            gsystem.button(2, "SANDWICH");
-            gsystem.button(3, "DRINKS");
-            gsystem.button(4, "SHOW ITEMS");
-            System.out.println();
-            gsystem.printLine(55, "ENTER CHOICE");
-            gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-            int admm1 = erh.getChoice(0, 4);
+            cls();
+            printHeader();
+            generateTitle("manage_menu");
+            line();
+            button(0, "BACK");
+            button(1, "MEALS");
+            button(2, "SANDWICH");
+            button(3, "DRINKS");
+            button(4, "SHOW ITEMS");
+            line();
+            printLine(55, WHI + "ENTER CHOICE" + RES);
+            pointer();
+            int admm1 = getChoice(0, 4);
 
             switch (admm1)
             {
                 case 0 -> { return; }
-                case 1 -> manageMenu2(MainProcess.MEALS_ITEMS,    "manage_menu_meals");
-                case 2 -> manageMenu2(MainProcess.SANDWICH_ITEMS, "manage_menu_sandwich");
-                case 3 -> manageMenu2(MainProcess.DRINKS_ITEMS,   "manage_menu_drinks");
+                case 1 -> manageMenu2(OrderFood.MEALS_ITEMS,    "manage_menu_meals");
+                case 2 -> manageMenu2(OrderFood.SANDWICH_ITEMS, "manage_menu_sandwich");
+                case 3 -> manageMenu2(OrderFood.DRINKS_ITEMS,   "manage_menu_drinks");
                 case 4 -> showItems();
             }
         }
@@ -87,17 +79,17 @@ public class Administration
     // third phase of admin where the admin can add or delete items on the category's mmenu
     private void manageMenu2(HashMap<String, Double> MAP, String CAT)
     {
-        gsystem.cls();
-        gsystem.printHeader();
-        gsystem.generateTitle(CAT);
-        System.out.println();
-        gsystem.button(0, "BACK");
-        gsystem.button(1, "ADD ITEM");
-        gsystem.button(2, "DELETE ITEM");
-        System.out.println();
-        gsystem.printLine(55, "ENTER CHOICE");
-        gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-        int admm2 = erh.getChoice(0, 2);
+        cls();
+        printHeader();
+        generateTitle(CAT);
+        line();
+        button(0, "BACK");
+        button(1, "ADD ITEM");
+        button(2, "DELETE ITEM");
+        line();
+        printLine(55, WHI + "ENTER CHOICE" + RES);
+        pointer();
+        int admm2 = getChoice(0, 2);
 
         switch (admm2) 
         {
@@ -111,180 +103,181 @@ public class Administration
     private void addItem(HashMap<String, Double> MAP, String CAT)
     {  
         boolean runAgain;
+        boolean confirm;
         String item = null;
         double price = 0;
 
         do 
         {
             runAgain = false;
+            confirm = false;
 
-            gsystem.cls();
-            gsystem.printHeader();
-            gsystem.generateTitle(CAT);
-            System.out.println();
+            cls();
+            printHeader();
+            generateTitle(CAT);
+            line();
 
-            try 
-            {
-                // get the item's name
-                gsystem.printLine(55, "ENTER DESIRED ITEM THAT YOU WANT TO ADD ON THIS MENU  "); 
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-                item = br.readLine();
-    
-                // get the item's price
-                System.out.println();
-                gsystem.printLine(55, "ENTER ITEM'S AMOUNT:  ");
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-                price = erh.getAmount();
-            } 
-            catch (IOException e) 
-            { 
-                e.printStackTrace(); 
-            }
+            // get the item's name
+            printLine(55, WHI + "ENTER DESIRED ITEM THAT YOU WANT TO ADD ON THIS MENU" + RES); 
+            pointer();
+            item = getLine();   
+
+            // get the item's price
+            line();
+            printLine(55, WHI + "ENTER ITEM'S AMOUNT" + RES);
+            pointer();
+            price = getAmount();
             
-            System.out.println();
+            line();
 
             // ask to add other item if the given item exist in the selected category
             if (MAP.containsKey(item))
             {
-                gsystem.printLine(55, "THIS ITEM IS ALREADY EXIST");
-                gsystem.printLine(55, "DO YOU WANT TO ADD OTHER ITEM INSTEAD? (y/n)");
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-                runAgain = erh.getConfirmation();
+                printLine(55, RED + "THIS ITEM IS ALREADY EXIST" + RES);
+                printLine(55, WHI + "DO YOU WANT TO ADD OTHER ITEM INSTEAD? (y/n)" + RES);
+                pointer();
+                runAgain = getConfirmation();
+
+                if (!runAgain) 
+                {
+                    line();
+                    printLine(58, RED + "ADDING ITEM IS CANCELLED SUCCESSFULLY!" + RES);
+                }
             }
             // otherwise, confirm the admin before adding it to the category's menu
             else
             {
-                gsystem.printLine(44, gsystem.fill(66, '='));
-                gsystem.printLine(45, gsystem.YEL + "ITEM" + gsystem.RES + "        :  " + item);
-                gsystem.printLine(45, gsystem.YEL + "PRICE" + gsystem.RES + "       :  Php " + price);
-                gsystem.printLine(44, gsystem.fill(66, '='));
-                System.out.println();
-                gsystem.printLine(55, "ARE YOU SURE TO ADD THIS ITEM? (y/n)");
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-                boolean confirm = erh.getConfirmation();
+                printLine(44, WHI + fill(66, '=') + RES);
+                printLine(45, YEL + "ITEM" + RES + "        :  " + item + RES);
+                printLine(45, YEL + "PRICE" + RES + "       :  Php " + price + RES);
+                printLine(44, WHI + fill(66, '='));
+                line();
 
-                System.out.println();
+                printLine(55, WHI + "ARE YOU SURE TO ADD THIS ITEM? (y/n)" + RES);
+                pointer();
+                confirm = getConfirmation();
+
+                line();
 
                 if (confirm)
                 {
                     MAP.put(item, price);
-                    gsystem.addToFile(CAT, item, price);
-                    gsystem.printLine(64, "ITEM IS ADDED SUCCESSFULLY!");
+                    addToFile(CAT, item, price);
+                    printLine(64, GRE + "ITEM IS ADDED SUCCESSFULLY!" + RES);
                 }
                 else
                 { 
-                    gsystem.printLine(58, "ADDING ITEM IS CANCELLED SUCCESSFULLY!");
+                    printLine(58, RED + "ADDING ITEM IS CANCELLED SUCCESSFULLY!" + RES);
                 }
             }
         }
         while (runAgain);
         
-        gsystem.generateTitle("null");
-        gsystem.pause();
+        generateTitle("null");
+        pause();
     }
 
     // function to delete item to the selected category
     private void deleteItem(HashMap<String, Double> MAP, String CAT)
     {  
         boolean runAgain;
+        boolean confirm;
         String item = null;
 
         do 
         {
             runAgain = false;
+            confirm = false;
 
-            gsystem.cls();
-            gsystem.printHeader();
-            gsystem.generateTitle(CAT); 
-            System.out.println();
+            cls();
+            printHeader();
+            generateTitle(CAT); 
+            line();
 
-            try
-            {
-                // get the item's name
-                gsystem.printLine(55, "ENTER ITEM THAT YOU WANT TO DELETE");
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-                item = br.readLine();
-            } 
-            catch (IOException e) 
-            { 
-                e.printStackTrace(); 
-            }
+            // get the item's name
+            printLine(55, WHI + "ENTER ITEM THAT YOU WANT TO DELETE" + RES);
+            pointer();
+            item = getLine();
             
-            System.out.println();
+            line();
             
             // display the given item's name and price and confirm to the admin if the item exist in the category
             if (MAP.containsKey(item))
             {
-                gsystem.printLine(44, gsystem.fill(66, '='));
-                gsystem.printLine(45, gsystem.YEL + "ITEM" + gsystem.RES + "        :  " + item);
-                gsystem.printLine(45, gsystem.YEL + "PRICE" + gsystem.RES + "       :  Php " + MAP.get(item));
-                gsystem.printLine(44, gsystem.fill(66, '='));
-                System.out.println();
-                gsystem.printLine(55, "ARE YOU SURE TO DELETE THIS ITEM? (y/n)");
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-                boolean confirm = erh.getConfirmation();
+                printLine(44, WHI + fill(66, '=') + RES);
+                printLine(45, YEL + "ITEM" + RES + "        :  " + item + RES);
+                printLine(45, YEL + "PRICE" + RES + "       :  Php " + MAP.get(item) + RES);
+                printLine(44, WHI + fill(66, '=') + RES);
+                line();
 
+                printLine(55, WHI + "ARE YOU SURE TO DELETE THIS ITEM? (y/n)" + RES);
+                pointer();
+                confirm = getConfirmation();
+
+                line();
+                
                 if (confirm)
                 {
                     MAP.remove(item); 
-                    gsystem.removeToFile(CAT, item);
-                    gsystem.printLine(50, "ITEM IS DELETED SUCCESSFULLY!");
+                    removeToFile(CAT, item);
+                    printLine(63, GRE + "ITEM IS DELETED SUCCESSFULLY!" + RES);
                 }
                 else 
                 { 
-                    gsystem.printLine(50, "DELETING ITEM IS CANCELLED SUCCESSFULLY!");
+                    printLine(58, RED + "DELETING ITEM IS CANCELLED SUCCESSFULLY!" + RES);
                 }
             }
             // otherwise, display that the given item does not exist and ask the admin to delete other item instead
             else 
             { 
-                gsystem.printLine(55, "ITEM DOES NOT EXIST");
-                gsystem.printLine(55, "DO YOU WANT TO DELETE OTHER ITEM INSTEAD? (y/n)");
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-                runAgain = erh.getConfirmation();
+                printLine(68, RED + "ITEM DOES NOT EXIST" + RES);
+                line();
+                printLine(55, WHI + "DO YOU WANT TO DELETE OTHER ITEM INSTEAD? (y/n)" + RES);
+                pointer();
+                runAgain = getConfirmation();
             }
         }
         while (runAgain);
 
-        gsystem.generateTitle("null");
-        gsystem.pause();
+        generateTitle("null");
+        pause();
     }
 
     // function to show all category's items
     private void showItems()
     {
-        gsystem.cls();
-        gsystem.printHeader();
-        gsystem.generateTitle("administration");
+        cls();
+        printHeader();
+        generateTitle("administration");
 
-        System.out.println();
-        printMenu(MainProcess.MEALS_ITEMS, "MEALS");
+        line();
+        printMenu(OrderFood.MEALS_ITEMS, "MEALS");
         
-        System.out.println("\n");
-        printMenu(MainProcess.SANDWICH_ITEMS, "SANDWICH");
+        line("\n");
+        printMenu(OrderFood.SANDWICH_ITEMS, "SANDWICH");
         
-        System.out.println("\n");  
-        printMenu(MainProcess.DRINKS_ITEMS, "DRINKS");
+        line("\n");  
+        printMenu(OrderFood.DRINKS_ITEMS, "DRINKS");
             
-        System.out.println();
-        gsystem.generateTitle("null");
-        gsystem.pause();
+        line();
+        generateTitle("null");
+        pause();
     }
 
     // function that will help showItems function to display item in formatted way
     protected void printMenu(HashMap<String, Double> MENU, String CAT)
     {
         String format = "%-7s%-64s%-12s%n";
-        String title = gsystem.RED + "=" + gsystem.RES + "[ " + gsystem.YEL + CAT + gsystem.RES + " ]" + gsystem.RED + "=" + gsystem.RES;
+        String title = RED + "=" + WHI + "[ " + YEL + CAT + WHI + " ]" + RED + "=" + RES;
         switch (CAT)
         {
-            case "MEALS"    -> gsystem.printLine(34, gsystem.fill(38, '-') + title + gsystem.fill(38, '-') + gsystem.YEL);
-            case "SANDWICH" -> gsystem.printLine(34, gsystem.fill(37, '-') + title + gsystem.fill(36, '-') + gsystem.YEL);
-            case "DRINKS"   -> gsystem.printLine(34, gsystem.fill(38, '-') + title + gsystem.fill(37, '-') + gsystem.YEL);
+            case "MEALS"    -> printLine(34, WHI + fill(38, '-') + title + fill(38, '-') + YEL);
+            case "SANDWICH" -> printLine(34, WHI + fill(37, '-') + title + fill(36, '-') + YEL);
+            case "DRINKS"   -> printLine(34, WHI + fill(38, '-') + title + fill(37, '-') + YEL);
         }
         
-        gsystem.printFormat(35, format, "CODE", "ITEM", "PRICE");
-        gsystem.printLine(34, gsystem.RES + gsystem.fill(87, '-'));
+        printFormat(35, format, "CODE", "ITEM", "PRICE");
+        printLine(34, WHI + fill(87, '-') + RES);
         int counter = 1;
 
         // display all the passed category's items
@@ -296,43 +289,44 @@ public class Administration
 
             if (item.length() > 32)
             {
-                ArrayList<String> multiLine = gsystem.wrapText(item, 64);
+                ArrayList<String> multiLine = wrapText(item, 64);
 
-                gsystem.printFormat(35, format, counter++, multiLine.get(0), priceFormat);
+                printFormat(35, format, counter++, multiLine.get(0), priceFormat);
                 
                 for (int i = 1; i < multiLine.size(); i++)
-                    gsystem.printFormat(35, format, "", multiLine.get(i), "");
+                    printFormat(35, format, "", multiLine.get(i), "");
             }
             else 
             {
-                gsystem.printFormat(35, format, counter++, item, priceFormat);
+                printFormat(35, format, counter++, item, priceFormat);
             }
         }
         
-        gsystem.printLine(34, gsystem.fill(87, '-'));
+        printLine(34, WHI + fill(87, '-') + RES);
     }
 
     // function to show the orders report/information
     private void report()
     {
-        gsystem.cls();
-        gsystem.printHeader();
-        gsystem.generateTitle("report");
-        System.out.println();
+        cls();
+        printHeader();
+        generateTitle("report");
+        line();
 
         // display if the reports is empty
         if (ORDER_REPORTS.isEmpty())
         {
-            gsystem.printLine(68, "THERE ARE NO ORDERS\n");
+            printNull();
+            printLine(68, WHI + "THERE ARE NO ORDERS\n" + RES);
         }
         // otherwise, display reports
         else
         {
             String format = "%-15s%-16s%-21s%-12s%n";
 
-            gsystem.printLine(44, gsystem.fill(68, '-') + gsystem.YEL);
-            gsystem.printFormat(45, format, "DATE", "TIME", "REFERRENCE NUMBER", "AMOUNT");
-            gsystem.printLine(44, gsystem.RES + gsystem.fill(68, '-'));
+            printLine(44, WHI + fill(68, '-') + YEL);
+            printFormat(45, format, "DATE", "TIME", "REFERRENCE NUMBER", "AMOUNT");
+            printLine(44, WHI + fill(68, '-') + WHI);
 
             for (ArrayList<Object> info : ORDER_REPORTS)
             {   
@@ -342,14 +336,14 @@ public class Administration
                 double amount   = new BigDecimal(info.get(3).toString()).doubleValue();
                 String amountFormat = "Php " + amount;
 
-                gsystem.printFormat(45, format, date, time, refNum, amountFormat);
+                printFormat(45, format, date, time, refNum, amountFormat);
             }
             
-            gsystem.printLine(44, gsystem.fill(68, '-'));
+            printLine(44, WHI + fill(68, '-')+ RES);
         }
 
-        System.out.println();
-        gsystem.generateTitle("null");
-        gsystem.pause();
+        line();
+        generateTitle("null");
+        pause();
     }
 }

@@ -12,11 +12,42 @@ import java.io.InputStreamReader;
  *  @author Niño Greg Gregorio
  *  @since 1.0
  */
-public class ErrorHandler 
-{   
-    // class and imports
-    private final GSystem gsystem = new GSystem(); 
+public class ErrorHandler extends GSystem
+{
     private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));   
+
+    /**
+     * Provides an input reader where the user can input any text.
+     * <p>
+     * This method handle any input and output exception.
+     * </p>
+     *
+     * @return valid user input
+     */
+    protected String getLine()
+    {
+        final String INVALID = RED + "INVALID INPUT, PLEASE TRY AGAIN" + RES;
+        String input;
+
+        // get valid input
+        while (true) 
+        {
+            input = null;
+
+            try 
+            { 
+                input = br.readLine(); 
+
+                if (!input.isEmpty()) return input;
+                else throw new IOException();
+            } 
+            catch (IOException e) 
+            { 
+                printLine(55, INVALID); 
+                pointer();
+            }
+        }
+    }
     
     /**
      * Returns a {@code int} value between the specified
@@ -30,18 +61,19 @@ public class ErrorHandler
      */
     protected int getChoice(int origin, int bound) 
     {
-        final String INVALID = "INVALID INPUT, PLEASE ENTER NUMBER BETWEEN " 
-            + gsystem.YEL + origin + gsystem.RES + " AND " + gsystem.YEL + bound + gsystem.RES;
-        
+        final String INVALID = RED + "INVALID INPUT, PLEASE ENTER NUMBER BETWEEN " + YEL + origin + RED + " AND " + YEL + bound + RES;
+        String input;
+        int i = 0;
+
         // get valid input
         while (true) 
         {
-            String input = null;
+            input = null;
 
             try 
             { 
                 input = br.readLine(); 
-                int i = Integer.parseInt(input);
+                i = Integer.parseInt(input);
                 
                 // return the input if its between or equal to origin and bound
                 if (i >= origin && i <= bound) return i;
@@ -50,8 +82,8 @@ public class ErrorHandler
             } 
             catch (NumberFormatException | IOException e) 
             { 
-                gsystem.printLine(55, INVALID); 
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
+                printLine(55, INVALID); 
+                pointer();
             }
         }
     }
@@ -63,15 +95,15 @@ public class ErrorHandler
      */
     protected double getAmount() 
     {
-        final String INVALID = "INVALID INPUT, PLEASE ENTER VALID AMOUNT";
-
+        final String INVALID = RED + "INVALID INPUT, PLEASE ENTER VALID AMOUNT" + RES;
+        String input;
         double price = 0;
         boolean invalid;
         
         // get valid input
         do
         {
-            String input = null;
+            input = null;
             invalid = false;
 
             try 
@@ -82,8 +114,8 @@ public class ErrorHandler
             } 
             catch (NumberFormatException | IOException e) 
             {  
-                gsystem.printLine(55, INVALID);
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
+                printLine(55, INVALID);
+                pointer();
                 invalid = true;
             }
         }
@@ -99,15 +131,15 @@ public class ErrorHandler
      */
     protected int getQuantity() 
     {
-        final String INVALID = "INVALID INPUT, MINIMUM IS 0 AND MAXIMUM IS 999";
-
+        final String INVALID = RED + "INVALID INPUT, MINIMUM IS 1 AND MAXIMUM IS 999" + RES;
+        String input;
         int quantity = 0;
         boolean invalid;
         
         // get valid input
         do
         {
-            String input = null;
+            input = null;
             invalid = false;
 
             try 
@@ -121,8 +153,8 @@ public class ErrorHandler
             } 
             catch (NumberFormatException | IOException e) 
             {  
-                gsystem.printLine(55,INVALID);
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
+                printLine(55, INVALID);
+                pointer();
                 invalid = true;
             }
         }
@@ -138,7 +170,7 @@ public class ErrorHandler
      */
     protected boolean getConfirmation()
     {
-        final String INVALID = "INVALID INPUT, PLEASE ENTER 'y' OR 'n'";
+        final String INVALID = RED + "INVALID INPUT, PLEASE ENTER 'y' OR 'n'" + RES;
 
         boolean invalid;
         String input;
@@ -162,8 +194,8 @@ public class ErrorHandler
             } 
             catch (IOException e) 
             { 
-                gsystem.printLine(55,INVALID);
-                gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
+                printLine(55, INVALID);
+                pointer();
                 invalid = true;
             } 
         }

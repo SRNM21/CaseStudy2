@@ -23,11 +23,22 @@ import java.util.Random;
  *  @author Niño Greg Gregorio
  *  @since 1.0
  */
-public class GSystem extends Color
+public class GSystem
 {
+    // ANSI color code
+    protected final String RES = "\u001B[0m";
+    protected final String BLA = "\033[1;90m";
+    protected final String RED = "\033[1;91m";
+    protected final String GRE = "\033[1;92m";
+    protected final String YEL = "\033[1;93m";
+    protected final String BLU = "\033[1;94m";
+    protected final String PUR = "\033[1;95m";
+    protected final String CYA = "\033[1;96m";
+    protected final String WHI = "\033[1;97m";
+
     // get systems' operating system
     private final String os = System.getProperty("os.name");
-
+    
     // files 
     private final File itemData = new File("ITEMS.txt");
     private final File OrderReports = new File("REPORTS.txt");
@@ -123,7 +134,7 @@ public class GSystem extends Color
         else
         {
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("Press any key...");
+            line(WHI + "Press any key..." + RES);
     
             try 
             { 
@@ -152,14 +163,14 @@ public class GSystem extends Color
 
                 cls();
 
-                System.out.print(fill(15, '\n'));
+                line(fill(15, '\n'));
 
-                printLine(49, loadingTitle);
-                printLine(49, "[" + GRE + loadBar + RES + "] " + j + "%");
+                printLine(49, WHI + loadingTitle + RES);
+                printLine(49, WHI + "[" + GRE + loadBar + WHI + "] " + j + "%" + RES);
 
                 try 
                 {
-                    Thread.sleep(100);
+                    Thread.sleep(50);
                 } 
                 catch (InterruptedException e) 
                 {
@@ -171,9 +182,8 @@ public class GSystem extends Color
         else 
         {
             cls();
-
-            System.out.println(fill(15, '\n'));
-            printLine(49, "Loading, Please Wait...");
+            fill(15, '\n');
+            printLine(49, WHI + "Loading, Please Wait..." + RES);
 
             try 
             { 
@@ -185,15 +195,15 @@ public class GSystem extends Color
             }
         }    
 
-        System.out.println("\n");
+        line("\n");
         
         // check the files if they exist
         checkReports();
 
-        if (foundFile()) printLine(64, "FILE IS SUCCESFULLY LOADED!");
-        else printLine(61, "NEW FILE IS SUCCESSFULLY CREATED!");
+        if (foundFile()) printLine(64, WHI + "FILE IS SUCCESFULLY LOADED!" + RES);
+        else printLine(61, WHI + "NEW FILE IS SUCCESSFULLY CREATED!" + RES);
         
-        System.out.println(fill(15, '\n'));
+        line(fill(15, '\n'));
     }
     
     // system's modified print
@@ -226,6 +236,24 @@ public class GSystem extends Color
         for (int i = 0; i < count; i++) filler.append(c);
 
         return filler.toString();
+    }
+    
+    // function to print pointer 
+    protected void pointer() 
+    {
+        prints(55, GRE + ">> " + WHI);    
+    }
+    
+    // function to print new line 
+    protected void line(String x) 
+    {
+        System.out.println(x);
+    }
+
+    // function to print blank line 
+    protected void line() 
+    {
+        System.out.println();
     }
 
     // function that will split long String and return it as ArrayList with specified size Strings
@@ -342,9 +370,9 @@ public class GSystem extends Color
                 // put retrieve data into its specific maps
                 switch (mapIndex) 
                 {
-                    case 1 -> MainProcess.MEALS_ITEMS.put(item, price);
-                    case 2 -> MainProcess.SANDWICH_ITEMS.put(item, price);
-                    case 3 -> MainProcess.DRINKS_ITEMS.put(item, price);
+                    case 1 -> OrderFood.MEALS_ITEMS.put(item, price);
+                    case 2 -> OrderFood.SANDWICH_ITEMS.put(item, price);
+                    case 3 -> OrderFood.DRINKS_ITEMS.put(item, price);
                 }
             }
 
@@ -503,26 +531,57 @@ public class GSystem extends Color
 
         while (line.length() < 15) line.append(" ");
 
-        printLine(64, "   ___________________"+ RED +",," + RES + "___");
+        printLine(64, WHI + "   ___________________"+ RED +",," + WHI + "___");
         printLine(64, "  /                       /");
-        printLine(64, " /  [ " + YEL + num + RES +" ] " + line + "/");
-        printLine(64, "/_______________________/");
+        printLine(64, " /  [ " + YEL + num + WHI +" ] " + line + "/");
+        printLine(64, "/_______________________/" + RES);
+    }
+    
+    // function to print null
+    protected void printNull()
+    {
+        line();
+        printLine(60, RED + " ___   ___  ________  ___   ___");
+        printLine(60, RED + "/\\  \\ /\\  \\/\\   __  \\/\\  \\ /\\  \\");
+        printLine(60, RED + "\\ \\  \\\\_\\  \\ \\  \\|\\  \\ \\  \\\\_\\  \\");
+        printLine(60, RED + " \\ \\_____   \\ \\  \\\\\\  \\ \\_____   \\");
+        printLine(60, RED + "  \\|_____|\\  \\ \\  \\\\\\  \\|_____|\\  \\");
+        printLine(60, RED + "         \\ \\__\\ \\_______\\     \\ \\__\\");
+        printLine(60, RED + "          \\|__|\\|_______|      \\|__|" + RES);
+        line();
+    }
+    
+    // function to print on exit
+    protected void printExit() 
+    {
+        line();
+        printLine(30, RED + "  ,ad8888ba,                                      88     88888888ba ");
+        printLine(30, RED + " d8\"'    `\"8b                                     88     88      \"8b  ");
+        printLine(30, RED + "d8'                                               88     88      ,8P  ");
+        printLine(30, RED + "88              ,adPPYba,    ,adPPYba,    ,adPPYb,88     88aaaaaa8P'  8b       d8   ,adPPYba,  ");
+        printLine(30, RED + "88      88888  a8\"     \"8a  a8\"     \"8a  a8\"    `Y88     88\"\"\"\"\"\"8b,  `8b     d8'  a8P_____88 ");
+        printLine(30, RED + "Y8,        88  8b       d8  8b       d8  8b       88     88      `8b   `8b   d8'   8PP\"\"\"\"\"\"\"  ");
+        printLine(30, RED + " Y8a.    .a88  \"8a,   ,a8\"  \"8a,   ,a8\"  \"8a,   ,d88     88      a8P    `8b,d8'    \"8b,   ,aa  ");
+        printLine(30, RED + "  `\"Y88888P\"    `\"YbbdP\"'    `\"YbbdP\"'    `\"8bbdP\"Y8     88888888P\"       Y88'      `\"Ybbd8\"'  ");
+        printLine(30, RED + "                                                                          d8'      ");
+        printLine(30, RED + "                                                                         d8' " + RES);
+        line();
     }
 
     // prints the header 
     protected void printHeader()
     {
-        System.out.println();
-        System.out.println();
-        System.out.println("                                                           (\\_(\\");
-        System.out.println("                                                           ( " + RED + "-" + RES + "." + RED + "-" + RES + ")           ^ ^");
-        System.out.println("                   _______                     " + RED + "$" + RES + "  _________c(\")(\")_________(" + RED + "-" + RES + "." + RED + "-" + RES + ")_________________________  " + RED + "$" + RES + " ");
-        System.out.println("                  |       |                   [_]|                                                       |[_]");
-        System.out.println("                  | KWAGO |                    | |   F A S T   F O O D   O R D E R I N G   S Y S T E M   | | ");
-        System.out.println("                  | ______|                    | |                " + YEL + "GREGORIO" + RES + " - " + YEL + "MATA" + RES + " - " + YEL + "PINEDA" + RES + "               | | ");
-        System.out.println("            ,___, |/                           | |_______________________________________________________| | ");
-        System.out.println("            ("+ YEL +"o,o" + RES + ")                              0" + RED + "=" + RES + "----------------------" + RED + "=" + RES + "[ " + GRE + "~~~~" + RED + "{{@" + RES + " ]" + RED + "=" + RES + "----------------------" + RED + "=" + RES + "0 ");   
-        System.out.println("            /)_)                               ");   
+        line();
+        line();
+        line(WHI + "                                                           (\\_(\\");
+        line("                                                           ( " + RED + "-" + WHI + "." + RED + "-" + WHI + ")           ^ ^");
+        line("                   _______                     " + RED + "$" + WHI + "  _________c(\")(\")_________(" + RED + "-" + WHI + "." + RED + "-" + WHI + ")_________________________  " + RED + "$");
+        line(WHI + "                  |       |                   [_]|                                                       |[_]");
+        line("                  | " + RED + "KWAGO" + WHI + " |                    | |   F A S T   F O O D   O R D E R I N G   S Y S T E M   | | ");
+        line(WHI + "                  | ______|                    | |                " + YEL + "GREGORIO" + WHI + " - " + YEL + "MATA" + WHI + " - " + YEL + "PINEDA" + WHI + "               | | ");
+        line("            ,___, |/                           | |_______________________________________________________| | ");
+        line("            ("+ YEL +"o,o" + WHI + ")                              0" + RED + "=" + WHI + "----------------------" + RED + "=" + WHI + "[ " + GRE + "~~~~" + RED + "{{@" + WHI + " ]" + RED + "=" + WHI + "----------------------" + RED + "=" + WHI + "0 ");   
+        line("            /)_)                               " + RES);   
     }
 
     // function to generate title/line to the system
@@ -530,41 +589,20 @@ public class GSystem extends Color
     {
         switch (x)
         {
-            case "null"                 -> System.out.println("00" + RED + "=" + RES + "---------------------------------------------------------------------" + RED + "=" + RES + "[ " + GRE + "~~~" + RED + "{@" + RES + " ]" + RED + "=" + RES + "---------------------------------------------------------------------" + RED + "=" + RES + "00");
-            case "main_menu"            -> System.out.println("00" + RED + "=" + RES + "----------m-m--------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "M A I N   M E N U" + RES + " ]" + RED + "=" + RES + "---------------------------------------------------------------" + RED + "=" + RES + "00");
-            case "order_food"           -> System.out.println("00" + RED + "=" + RES + "----------m-m-------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "O R D E R   F O O D" + RES + " ]" + RED + "=" + RES + "--------------------------------------------------------------" + RED + "=" + RES + "00");
-            case "order_food_meals"     -> System.out.println("00" + RED + "=" + RES + "----------m-m-------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "O R D E R   F O O D" + RES + " ]" + RED + "=" + RES + "----" + RED + "=" + YEL + "( " + RES + "MEALS )" + RED + "=" + RES + "-----------------------------------------------" + RED + "=" + RES + "00");
-            case "order_food_sandwich"  -> System.out.println("00" + RED + "=" + RES + "----------m-m-------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "O R D E R   F O O D" + RES + " ]" + RED + "=" + RES + "----" + RED + "=" + YEL + "( " + RES + "SANDWICH )" + RED + "=" + RES + "--------------------------------------------" + RED + "=" + RES + "00");
-            case "order_food_drinks"    -> System.out.println("00" + RED + "=" + RES + "----------m-m-------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "O R D E R   F O O D" + RES + " ]" + RED + "=" + RES + "----" + RED + "=" + YEL + "( " + RES + "DRINKS )" + RED + "=" + RES + "----------------------------------------------" + RED + "=" + RES + "00");
-            case "my_cart"              -> System.out.println("00" + RED + "=" + RES + "----------m-m----------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "M Y   C A R T" + RES + " ]" + RED + "=" + RES + "-----------------------------------------------------------------" + RED + "=" + RES + "00");
-            case "administration"       -> System.out.println("00" + RED + "=" + RES + "----------m-m---------------------------------------------" + RED + "=" + RES + "[ " + YEL + "A D M I N I S T R A T I O N" + RES + " ]" + RED + "=" + RES + "----------------------------------------------------------" + RED + "=" + RES + "00");
-            case "manage_menu"          -> System.out.println("00" + RED + "=" + RES + "----------m-m------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "M A N A G E   M E N U" + RES + " ]" + RED + "=" + RES + "-------------------------------------------------------------" + RED + "=" + RES + "00");  
-            case "manage_menu_meals"    -> System.out.println("00" + RED + "=" + RES + "----------m-m------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "M A N A G E   M E N U" + RES + " ]" + RED + "=" + RES + "----" + RED + "=" + YEL + "( " + RES + "MEALS" + YEL + " )" + RED + "=" + RES + "----------------------------------------------" + RED + "=" + RES + "00");  
-            case "manage_menu_sandwich" -> System.out.println("00" + RED + "=" + RES + "----------m-m------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "M A N A G E   M E N U" + RES + " ]" + RED + "=" + RES + "----" + RED + "=" + YEL + "( " + RES + "SANDWICH" + YEL + " )" + RED + "=" + RES + "-------------------------------------------" + RED + "=" + RES + "00");  
-            case "manage_menu_drinks"   -> System.out.println("00" + RED + "=" + RES + "----------m-m------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "M A N A G E   M E N U" + RES + " ]" + RED + "=" + RES + "----" + RED + "=" + YEL + "( " + RES + "DRINKS" + YEL + " )" + RED + "=" + RES + "---------------------------------------------" + RED + "=" + RES + "00");  
-            case "report"               -> System.out.println("00" + RED + "=" + RES + "----------m-m-----------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "R E P O R T" + RES + " ]" + RED + "=" + RES + "------------------------------------------------------------------" + RED + "=" + RES + "00");
-            case "exit"                 -> System.out.println("00" + RED + "=" + RES + "----------m-m-------------------------------------------------------" + RED + "=" + RES + "[ " + YEL + "E X I T" + RES + " ]" + RED + "=" + RES + "--------------------------------------------------------------------" + RED + "=" + RES + "00");
+            case "null"                 -> line(WHI + "00" + RED + "=" + WHI + "---------------------------------------------------------------------" + RED + "=" + WHI + "[ " + GRE + "~~~" + RED + "{@" + WHI + " ]" + RED + "=" + WHI + "---------------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "main_menu"            -> line(WHI + "00" + RED + "=" + WHI + "----------m-m--------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A I N   M E N U" + WHI + " ]" + RED + "=" + WHI + "---------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "order_food"           -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "O R D E R   F O O D" + WHI + " ]" + RED + "=" + WHI + "--------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "order_food_meals"     -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "O R D E R   F O O D" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "MEALS )" + RED + "=" + WHI + "-----------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "order_food_sandwich"  -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "O R D E R   F O O D" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "SANDWICH )" + RED + "=" + WHI + "--------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "order_food_drinks"    -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "O R D E R   F O O D" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "DRINKS )" + RED + "=" + WHI + "----------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "my_cart"              -> line(WHI + "00" + RED + "=" + WHI + "----------m-m----------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M Y   C A R T" + WHI + " ]" + RED + "=" + WHI + "-----------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "administration"       -> line(WHI + "00" + RED + "=" + WHI + "----------m-m---------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "A D M I N I S T R A T I O N" + WHI + " ]" + RED + "=" + WHI + "----------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "manage_menu"          -> line(WHI + "00" + RED + "=" + WHI + "----------m-m------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A N A G E   M E N U" + WHI + " ]" + RED + "=" + WHI + "-------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);  
+            case "manage_menu_meals"    -> line(WHI + "00" + RED + "=" + WHI + "----------m-m------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A N A G E   M E N U" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "MEALS" + YEL + " )" + RED + "=" + WHI + "----------------------------------------------" + RED + "=" + WHI + "00" + RES);  
+            case "manage_menu_sandwich" -> line(WHI + "00" + RED + "=" + WHI + "----------m-m------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A N A G E   M E N U" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "SANDWICH" + YEL + " )" + RED + "=" + WHI + "-------------------------------------------" + RED + "=" + WHI + "00" + RES);  
+            case "manage_menu_drinks"   -> line(WHI + "00" + RED + "=" + WHI + "----------m-m------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A N A G E   M E N U" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "DRINKS" + YEL + " )" + RED + "=" + WHI + "---------------------------------------------" + RED + "=" + WHI + "00" + RES);  
+            case "report"               -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-----------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "R E P O R T" + WHI + " ]" + RED + "=" + WHI + "------------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "exit"                 -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "E X I T" + WHI + " ]" + RED + "=" + WHI + "--------------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
         }
     }
-}
-
-/**
- *  This class is used to provide {@code ANSI} color code
- * 
- *  @author Neelian Mata
- *  @author Jarius Maui Pineda
- *  @author Niño Greg Gregorio
- *  @since 1.0
- */
-class Color 
-{
-    final String RES = "\u001B[0m";
-    final String BLA = "\u001B[30m";
-    final String RED = "\u001B[31m";
-    final String GRE = "\u001B[32m";
-    final String YEL = "\u001B[33m";
-    final String BLU = "\u001B[34m";
-    final String PUR = "\u001B[35m";
-    final String CYA = "\u001B[36m";
-    final String WHI = "\u001B[37m";
 }

@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 /**
  *  The {@code MainProcess} class is the main menu of the system. Loop the flow until the user exits from it.
  * 
@@ -13,61 +11,50 @@ import java.util.HashMap;
  *  @author Niño Greg Gregorio
  *  @since 1.0
  */
-public class MainProcess 
+public class MainProcess extends ErrorHandler
 {
-    // retrieved items from the file
-    protected static HashMap<String, Double> MEALS_ITEMS      = new HashMap<>();
-    protected static HashMap<String, Double> SANDWICH_ITEMS   = new HashMap<>();
-    protected static HashMap<String, Double> DRINKS_ITEMS     = new HashMap<>();
-
-    // class
-    private static final ErrorHandler erh = new ErrorHandler();
-    private static final GSystem gsystem = new GSystem();
-
     // run the MainProcess thru main function if the system is not ran in Windows Command Prompt
     public static void main(String[] args) { new MainProcess(); }   
         
     // run the MainProcess Constructor if the System is ran in Windows Command Prompt
     MainProcess() 
     {
-
-        gsystem.load();
-        gsystem.pause();
-        gsystem.cls();
+        load();
+        pause();
+        cls();
 
         // loop the System's flow until the user exit
         boolean running = true;
         while (running) running = MainMenu();
 
         // prints when the user exit
-        gsystem.cls();
-        gsystem.printHeader();
-        gsystem.generateTitle("exit");
-
-        System.out.println("\n\n");
-        gsystem.printLine(62,"THANK YOU FOR USING OUR SYSTEM!");
-        System.out.println("\n\n");
-        
-        gsystem.generateTitle("null");
-        gsystem.pause();
+        cls();
+        printHeader();
+        generateTitle("exit");
+        line();
+        printExit();
+        printLine(62, WHI + "THANK YOU FOR USING OUR SYSTEM!" + RES);
+        line("\n");
+        generateTitle("null");
+        pause();
     }
 
     // menu of the system
     private boolean MainMenu()
     {
-        gsystem.cls();
-        gsystem.printHeader();
-        gsystem.generateTitle("main_menu");
-        System.out.println();
-        gsystem.button(1, "ORDER FOOD");
-        gsystem.button(2, "ADMINISTRATION");
-        gsystem.button(3, "EXIT");
-        System.out.println();
-        gsystem.printLine(55,"ENTER CHOICE");
-        gsystem.prints(55, gsystem.GRE + ">> " + gsystem.RES);
-        int mm = erh.getChoice(1, 3);
+        cls();
+        printHeader();
+        generateTitle("main_menu");
+        line();
+        button(1, "ORDER FOOD");
+        button(2, "ADMINISTRATION");
+        button(3, "EXIT");
+        line();
+        printLine(55, WHI + "ENTER CHOICE" + RES);
+        pointer();
+        int menuChoice = getChoice(1, 3);
     
-        switch (mm)
+        switch (menuChoice)
         {
             case 1 -> new OrderFood();
             case 2 -> new Administration();
