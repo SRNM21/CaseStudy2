@@ -230,7 +230,7 @@ public class Administration extends ErrorHandler
             // otherwise, display that the given item does not exist and ask the admin to delete other item instead
             else 
             { 
-                printLine(68, RED + "ITEM DOES NOT EXIST" + RES);
+                printLine(55, RED + "ITEM DOES NOT EXIST" + RES);
                 line();
                 printLine(55, WHI + "DO YOU WANT TO DELETE OTHER ITEM INSTEAD? (y/n)" + RES);
                 pointer();

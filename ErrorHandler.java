@@ -185,7 +185,7 @@ public class ErrorHandler extends GSystem
                 input = br.readLine();
 
                 // check if the input is 'y' or 'n' 
-                switch (input)
+                switch (input.toLowerCase())
                 {
                     case "y" -> { return true; }
                     case "n" -> { return false; }

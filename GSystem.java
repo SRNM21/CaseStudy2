@@ -335,7 +335,6 @@ public class GSystem
             { 
                 loadFile(); 
             }
-             
         } 
         catch (IOException e) 
         { 
@@ -429,8 +428,8 @@ public class GSystem
                     writer.write(MENU.get(items) + "\n");
                 }
                 
-                if (idx++ < 3)
-                    writer.write("-MENU" + (idx + 2) +"\n");
+                if (idx++ < 2)
+                    writer.write("-MENU" + (idx + 1) +"\n");
             }
             
             // write 'x' to the of the content
