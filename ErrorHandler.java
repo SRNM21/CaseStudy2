@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *  The {@code Error Handler} class implements {@link InputStreamReader} class as a line reader 
@@ -14,7 +16,7 @@ import java.io.InputStreamReader;
  */
 public class ErrorHandler extends GSystem
 {
-    private final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));   
+    private final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));   
 
     /**
      * Provides an input reader where the user can input any text.
@@ -26,7 +28,7 @@ public class ErrorHandler extends GSystem
      */
     protected String getLine()
     {
-        final String INVALID = RED + "INVALID INPUT, PLEASE TRY AGAIN" + RES;
+        final String INVALID = RED("INVALID INPUT, PLEASE TRY AGAIN");
         String input;
 
         // get valid input
@@ -36,7 +38,7 @@ public class ErrorHandler extends GSystem
 
             try 
             { 
-                input = br.readLine(); 
+                input = bufferedReader.readLine(); 
 
                 if (!input.isEmpty()) return input;
                 else throw new IOException();
@@ -50,6 +52,54 @@ public class ErrorHandler extends GSystem
     }
     
     /**
+     * Provides an input reader where the user can input any text.
+     * <p>
+     * This method handle any input and output exception.
+     * </p>
+     *
+     * @return valid item code
+     */
+    protected String getCode(ArrayList<Object[]> MENU, boolean cart)
+    {
+        final String INVALID = RED(" DOES NOT EXIST ON THIS MENU, PLEASE ENTER VALID CODE");
+        String input;
+        String[] codeInit = {"M", "S", "D"};
+
+        // get valid input
+        while (true) 
+        {
+            input = null;
+
+            try 
+            { 
+                input = bufferedReader.readLine(); 
+                
+                if (input.equals("0")) return "0";
+                String init = String.valueOf(input.charAt(0));
+                int code = input.charAt(1) - '0';
+ 
+                String searchCode = input;
+                if (cart) 
+                {
+                    if (MENU.stream().anyMatch(itemDes -> itemDes[0].equals(searchCode))) return input;
+                    else throw new Exception();
+                }
+                else
+                {
+                    if ((input.length() == 2 && (Arrays.stream(codeInit).anyMatch(ci -> ci.equals(init)) && (code <= MENU.size() && code > 0)))) return input;
+                    else throw new Exception();
+                }
+
+            }
+            catch (Exception e) 
+            { 
+                printLine(55, RED(input) + INVALID); 
+                pointer();
+            }
+        }
+    }
+
+    /**
      * Returns a {@code int} value between the specified
      * origin (inclusive) and the specified bound (exclusive).
      * 
@@ -61,9 +111,9 @@ public class ErrorHandler extends GSystem
      */
     protected int getChoice(int origin, int bound) 
     {
-        final String INVALID = RED + "INVALID INPUT, PLEASE ENTER NUMBER BETWEEN " + YEL + origin + RED + " AND " + YEL + bound + RES;
+        final String INVALID = RED("INVALID INPUT, PLEASE ENTER NUMBER BETWEEN ") + YEL(String.valueOf(origin)) + RED(" AND ") + YEL(String.valueOf(bound));
         String input;
-        int i = 0;
+        int choice = 0;
 
         // get valid input
         while (true) 
@@ -72,11 +122,11 @@ public class ErrorHandler extends GSystem
 
             try 
             { 
-                input = br.readLine(); 
-                i = Integer.parseInt(input);
+                input = bufferedReader.readLine(); 
+                choice = Integer.parseInt(input);
                 
                 // return the input if its between or equal to origin and bound
-                if (i >= origin && i <= bound) return i;
+                if (choice >= origin && choice <= bound) return choice;
                 // otherwise, throw exception
                 else throw new NumberFormatException();
             } 
@@ -95,7 +145,7 @@ public class ErrorHandler extends GSystem
      */
     protected double getAmount() 
     {
-        final String INVALID = RED + "INVALID INPUT, PLEASE ENTER VALID AMOUNT" + RES;
+        final String INVALID = RED("INVALID INPUT, PLEASE ENTER VALID AMOUNT");
         String input;
         double price = 0;
         boolean invalid;
@@ -108,7 +158,7 @@ public class ErrorHandler extends GSystem
 
             try 
             { 
-                input = br.readLine(); 
+                input = bufferedReader.readLine(); 
                 price = Double.parseDouble(input); 
                 // throws exception if the input contains invalid characters
             } 
@@ -129,9 +179,9 @@ public class ErrorHandler extends GSystem
      * 
      * @return a completely {@code int} value inputted by the user
      */
-    protected int getQuantity() 
+    protected int getQuantity(int stocks) 
     {
-        final String INVALID = RED + "INVALID INPUT, MINIMUM IS 1 AND MAXIMUM IS 999" + RES;
+        final String INVALID = RED("INSUFFICIENT STOCK, MAXIMUM QUANTITY IS " + stocks);
         String input;
         int quantity = 0;
         boolean invalid;
@@ -144,12 +194,12 @@ public class ErrorHandler extends GSystem
 
             try 
             {
-                input = br.readLine();
+                input = bufferedReader.readLine();
                 quantity = Integer.parseInt(input); 
 
                 // throws exception if the input contains invalid characters 
                 // or the input is 0 or 1000 or more
-                if (quantity <= 0 || quantity >= 999) throw new IOException();
+                if (quantity <= 0 || quantity > stocks) throw new IOException();
             } 
             catch (NumberFormatException | IOException e) 
             {  
@@ -170,7 +220,7 @@ public class ErrorHandler extends GSystem
      */
     protected boolean getConfirmation()
     {
-        final String INVALID = RED + "INVALID INPUT, PLEASE ENTER 'y' OR 'n'" + RES;
+        final String INVALID = RED("INVALID INPUT, PLEASE ENTER 'Y' OR 'N'");
 
         boolean invalid;
         String input;
@@ -182,7 +232,7 @@ public class ErrorHandler extends GSystem
 
             try 
             { 
-                input = br.readLine();
+                input = bufferedReader.readLine();
 
                 // check if the input is 'y' or 'n' 
                 switch (input.toLowerCase())

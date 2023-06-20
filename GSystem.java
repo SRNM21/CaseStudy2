@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -44,27 +43,27 @@ public class GSystem
     private final File OrderReports = new File("REPORTS.txt");
 
     // contents
-    private ArrayList<HashMap<String, String>> ORIGINAL_ITEMS = new ArrayList<>()
+    protected static ArrayList<ArrayList<Object[]>> ORIGINAL_ITEMS = new ArrayList<>()
     {{
-        add(new HashMap<>()
+        add(new ArrayList<>()
         {{
-            put("Burger Steak", "99.20");
-            put("Fried Chicken", "80.30"); 
-            put("Spaghetti", "90.20");
+            add(new Object[] {"Burger Steak", 99.20, 100});
+            add(new Object[] {"Fried Chicken", 80.30, 100}); 
+            add(new Object[] {"Spaghetti", 90.20, 100});
         }});
 
-        add(new HashMap<>()
+        add(new ArrayList<>()
         {{
-            put("Fried Chicken Sandwich", "50.80");
-            put("Vegan Sandwich", "40.10"); 
-            put("Egg Sandwich", "29.99");
+            add(new Object[] {"Fried Chicken Sandwich", 50.80, 100});
+            add(new Object[] {"Vegan Sandwich", 40.10, 100}); 
+            add(new Object[] {"Egg Sandwich", 29.99, 100});
         }});
 
-        add(new HashMap<>()
+        add(new ArrayList<>()
         {{
-            put("Water", "10.00");
-            put("Iced Tea", "15.30"); 
-            put("Coca Cola", "20.20");
+            add(new Object[] {"Water", 10.00, 100});
+            add(new Object[] {"Iced Tea", 15.30, 100}); 
+            add(new Object[] {"Coca Cola", 20.20, 100});
         }});
     }};
     
@@ -134,7 +133,7 @@ public class GSystem
         else
         {
             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-            line(WHI + "Press any key..." + RES);
+            line(WHI("Press any key..."));
     
             try 
             { 
@@ -147,26 +146,32 @@ public class GSystem
         }
     }
 
-    // loading animation while retrieving/creating the contents of the system
-    protected void load() 
+    // loading animation
+    protected void loadingAnim(String x) 
     {
         // run animation if the system is on Windows command prompt
         if (System.getProperty("os.name").contains("Windows"))
         {
             StringBuilder loadingBar = new StringBuilder(fill(50, ' '));
-            String loadingTitle = "Loading...";
+            String loadingTitle = WHI(x);
 
             for (int i = 0, j = 2; i < 50; i++, j += 2) 
             {
                 loadingBar.setCharAt(i, '#');
-                String loadBar = loadingBar.toString();
+                String loadBar = GRE(loadingBar.toString());
 
                 cls();
 
                 line(fill(15, '\n'));
 
-                printLine(49, WHI + loadingTitle + RES);
-                printLine(49, WHI + "[" + GRE + loadBar + WHI + "] " + j + "%" + RES);
+                if (x.equals("Restocking..."))
+                { 
+                    printHeader("supplier");
+                    printSupplier();
+                }
+
+                printLine(49, loadingTitle);
+                printLine(49, WHI("[") + loadBar + WHI("] " + j + "%"));
 
                 try 
                 {
@@ -183,7 +188,7 @@ public class GSystem
         {
             cls();
             fill(15, '\n');
-            printLine(49, WHI + "Loading, Please Wait..." + RES);
+            printLine(49, WHI("Loading, Please Wait..."));
 
             try 
             { 
@@ -196,12 +201,18 @@ public class GSystem
         }    
 
         line("\n");
-        
+    }
+
+    // retrieving/creating the contents of the system
+    protected void load() 
+    {
+        loadingAnim("Loading...");
+
         // check the files if they exist
         checkReports();
 
-        if (foundFile()) printLine(64, WHI + "FILE IS SUCCESFULLY LOADED!" + RES);
-        else printLine(61, WHI + "NEW FILE IS SUCCESSFULLY CREATED!" + RES);
+        if (foundFile()) printLine(64, WHI("FILE IS SUCCESFULLY LOADED!"));
+        else printLine(61, WHI("NEW FILE IS SUCCESSFULLY CREATED!"));
         
         line(fill(15, '\n'));
     }
@@ -239,22 +250,37 @@ public class GSystem
     }
     
     // function to print pointer 
-    protected void pointer() 
-    {
-        prints(55, GRE + ">> " + WHI);    
-    }
+    protected void pointer() { prints(55, GRE(">> ")); }
     
     // function to print new line 
-    protected void line(String x) 
-    {
-        System.out.println(x);
-    }
+    protected void line(String x) { System.out.println(x); }
 
     // function to print blank line 
-    protected void line() 
-    {
-        System.out.println();
-    }
+    protected void line() { System.out.println(); }
+
+    // return color black string
+    protected String BLA(String x) { return BLA + x + WHI; }
+
+    // return color red string
+    protected String RED(String x) { return RED + x + WHI; }
+
+    // return color green string
+    protected String GRE(String x) { return GRE + x + WHI; }
+    
+    // return color yellow string
+    protected String YEL(String x) { return YEL + x + WHI; }
+
+    // return color blue string
+    protected String BLU(String x) { return BLU + x + WHI; }
+    
+    // return color purple string
+    protected String PUR(String x) { return PUR + x + WHI; }
+    
+    // return color cyan string
+    protected String CYA(String x) { return CYA + x + WHI; }
+
+    // return color white string
+    protected String WHI(String x) { return WHI + x + WHI; }
 
     // function that will split long String and return it as ArrayList with specified size Strings
     protected ArrayList<String> wrapText(String x, int column)
@@ -347,10 +373,16 @@ public class GSystem
     // function to retrieve data from the item file
     protected void loadFile() 
     {
+        OrderFood.MEALS_ITEMS.clear();
+        OrderFood.SANDWICH_ITEMS.clear();
+        OrderFood.DRINKS_ITEMS.clear();
+
         try (BufferedReader reader = new BufferedReader(new FileReader(itemData)))
         {   
             String line;
             int mapIndex = 0;
+
+            Administration.GRAND_TOTAL_INCOME = new BigDecimal(reader.readLine());
 
             // read file until it reaches 'x'
             while ((line = reader.readLine()) != null) 
@@ -363,15 +395,16 @@ public class GSystem
                     continue;
                 }
 
-                String item = line;
-                double price = Double.parseDouble(reader.readLine());
+                String item     = line;
+                double price    = Double.parseDouble(reader.readLine());
+                int stocks      = Integer.parseInt(reader.readLine());
 
                 // put retrieve data into its specific maps
                 switch (mapIndex) 
                 {
-                    case 1 -> OrderFood.MEALS_ITEMS.put(item, price);
-                    case 2 -> OrderFood.SANDWICH_ITEMS.put(item, price);
-                    case 3 -> OrderFood.DRINKS_ITEMS.put(item, price);
+                    case 1 -> OrderFood.MEALS_ITEMS.add(new Object[] {item, price, stocks});
+                    case 2 -> OrderFood.SANDWICH_ITEMS.add(new Object[] {item, price, stocks});
+                    case 3 -> OrderFood.DRINKS_ITEMS.add(new Object[] {item, price, stocks});
                 }
             }
 
@@ -382,34 +415,6 @@ public class GSystem
             e.printStackTrace(); 
         }
     }
-
-    // function to add data to the item file
-    protected void addToFile(String cat, String item, double price) 
-    {
-        switch (cat)
-        {
-            case "manage_menu_meals"    -> ORIGINAL_ITEMS.get(0).put(item, Double.toString(price));
-            case "manage_menu_sandwich" -> ORIGINAL_ITEMS.get(1).put(item, Double.toString(price));
-            case "manage_menu_drinks"   -> ORIGINAL_ITEMS.get(2).put(item, Double.toString(price));
-        }
-
-        // update the contents of the item file
-        updateFile();
-    }
-
-    // function to delete data from the item file
-    protected void removeToFile(String cat, String item) 
-    {
-        switch (cat)
-        {
-            case "manage_menu_meals"    -> ORIGINAL_ITEMS.get(0).remove(item);
-            case "manage_menu_sandwich" -> ORIGINAL_ITEMS.get(1).remove(item);
-            case "manage_menu_drinks"   -> ORIGINAL_ITEMS.get(2).remove(item);
-        }
-
-        // update the contents of the item file
-        updateFile();
-    }
     
     // function to update items file
     protected void updateFile() 
@@ -417,15 +422,19 @@ public class GSystem
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(itemData)))
         {
             int idx = 0;
+            writer.write(Administration.GRAND_TOTAL_INCOME.toPlainString() + "\n");
             writer.write("-MENU1\n");
 
             // re-write all dynamically added data to the item file
-            for (HashMap<String, String> MENU : ORIGINAL_ITEMS) 
+            for (ArrayList<Object[]> MENU : ORIGINAL_ITEMS) 
             {
-                for (String items : MENU.keySet()) 
+                for (Object[] items : MENU) 
                 {
-                    writer.write(items + "\n");
-                    writer.write(MENU.get(items) + "\n");
+                    String item     = items[0].toString();
+                    double price    = (double) items[1];
+                    int stocks      = (int) items[2];
+
+                    writer.write(item + "\n" + price + "\n" + stocks + "\n");
                 }
                 
                 if (idx++ < 2)
@@ -440,6 +449,34 @@ public class GSystem
         { 
             e.printStackTrace(); 
         }
+    }
+
+    // function to add data to the item file
+    protected void addToFile(String cat, String item, double price, int stocks) 
+    {
+        switch (cat)
+        {
+            case "manage_menu_meals"    -> ORIGINAL_ITEMS.get(0).add(new Object[] {item, price, stocks});
+            case "manage_menu_sandwich" -> ORIGINAL_ITEMS.get(1).add(new Object[] {item, price, stocks});
+            case "manage_menu_drinks"   -> ORIGINAL_ITEMS.get(2).add(new Object[] {item, price, stocks});
+        }
+
+        // update the contents of the item file 
+        updateFile();
+    }
+
+    // function to delete data from the item file
+    protected void removeToFile(String cat, int index) 
+    {
+        switch (cat)
+        {
+            case "manage_menu_meals"    -> ORIGINAL_ITEMS.get(0).remove(index);
+            case "manage_menu_sandwich" -> ORIGINAL_ITEMS.get(1).remove(index);
+            case "manage_menu_drinks"   -> ORIGINAL_ITEMS.get(2).remove(index);
+        }
+
+        // update the contents of the item file
+        updateFile();
     }
 
     // function to check the reports file
@@ -530,57 +567,137 @@ public class GSystem
 
         while (line.length() < 15) line.append(" ");
 
-        printLine(64, WHI + "   ___________________"+ RED +",," + WHI + "___");
+        printLine(64, WHI("   ___________________") + RED(",,") + WHI("___"));
         printLine(64, "  /                       /");
-        printLine(64, " /  [ " + YEL + num + WHI +" ] " + line + "/");
-        printLine(64, "/_______________________/" + RES);
+        printLine(64, " /  [ " + YEL(String.valueOf(num)) + " ] " + line + "/");
+        printLine(64, "/_______________________/");
     }
     
     // function to print null
     protected void printNull()
     {
         line();
-        printLine(60, RED + " ___   ___  ________  ___   ___");
-        printLine(60, RED + "/\\  \\ /\\  \\/\\   __  \\/\\  \\ /\\  \\");
-        printLine(60, RED + "\\ \\  \\\\_\\  \\ \\  \\|\\  \\ \\  \\\\_\\  \\");
-        printLine(60, RED + " \\ \\_____   \\ \\  \\\\\\  \\ \\_____   \\");
-        printLine(60, RED + "  \\|_____|\\  \\ \\  \\\\\\  \\|_____|\\  \\");
-        printLine(60, RED + "         \\ \\__\\ \\_______\\     \\ \\__\\");
-        printLine(60, RED + "          \\|__|\\|_______|      \\|__|" + RES);
+        printLine(60, RED(" ___   ___  ________  ___   ___"));
+        printLine(60, RED("/\\  \\ /\\  \\/\\   __  \\/\\  \\ /\\  \\"));
+        printLine(60, RED("\\ \\  \\\\_\\  \\ \\  \\|\\  \\ \\  \\\\_\\  \\"));
+        printLine(60, RED(" \\ \\_____   \\ \\  \\\\\\  \\ \\_____   \\"));
+        printLine(60, RED("  \\|_____|\\  \\ \\  \\\\\\  \\|_____|\\  \\"));
+        printLine(60, RED("         \\ \\__\\ \\_______\\     \\ \\__\\"));
+        printLine(60, RED("          \\|__|\\|_______|      \\|__|"));
         line();
     }
     
+    protected void printCash() 
+    {
+        line();
+        printLine(69, RED("   _....._      "));
+        printLine(69, RED("  ';-.--';'     "));
+        printLine(69, RED("    }===={      "));
+        printLine(69, RED("   .   __  .    "));
+        printLine(69, RED("  ': _|__\\_ '  "));
+        printLine(69, RED(" /::  |__/   \\ "));
+        printLine(69, RED(" |::  |       | "));
+        printLine(69, RED(" \\::. |       /"));
+        printLine(69, RED("  '::_     _.'  "));
+        printLine(69, RED("      '''''     "));
+        line();
+    }
+
+    protected void printCard() 
+    {
+        printLine(62, RED(" ____________________________ "));
+        printLine(62, RED("|                            |"));
+        printLine(62, RED("|  KWAGO CARD           )))  |"));
+        printLine(62, RED("|                            |"));
+        printLine(62, RED("|  [{}]                      |"));
+        printLine(62, RED("|                            |"));
+        printLine(62, RED("|  0000 1111 2222 3333 4444  |"));
+        printLine(62, RED("|  G.Dredd             4/20  |"));
+        printLine(62, RED("|____________________________|"));      
+    }
+
     // function to print on exit
     protected void printExit() 
     {
         line();
-        printLine(30, RED + "  ,ad8888ba,                                      88     88888888ba ");
-        printLine(30, RED + " d8\"'    `\"8b                                     88     88      \"8b  ");
-        printLine(30, RED + "d8'                                               88     88      ,8P  ");
-        printLine(30, RED + "88              ,adPPYba,    ,adPPYba,    ,adPPYb,88     88aaaaaa8P'  8b       d8   ,adPPYba,  ");
-        printLine(30, RED + "88      88888  a8\"     \"8a  a8\"     \"8a  a8\"    `Y88     88\"\"\"\"\"\"8b,  `8b     d8'  a8P_____88 ");
-        printLine(30, RED + "Y8,        88  8b       d8  8b       d8  8b       88     88      `8b   `8b   d8'   8PP\"\"\"\"\"\"\"  ");
-        printLine(30, RED + " Y8a.    .a88  \"8a,   ,a8\"  \"8a,   ,a8\"  \"8a,   ,d88     88      a8P    `8b,d8'    \"8b,   ,aa  ");
-        printLine(30, RED + "  `\"Y88888P\"    `\"YbbdP\"'    `\"YbbdP\"'    `\"8bbdP\"Y8     88888888P\"       Y88'      `\"Ybbd8\"'  ");
-        printLine(30, RED + "                                                                          d8'      ");
-        printLine(30, RED + "                                                                         d8' " + RES);
+        printLine(30, RED("  ,ad8888ba,                                      88     88888888ba "));
+        printLine(30, RED(" d8\"'    `\"8b                                     88     88      \"8b  "));
+        printLine(30, RED("d8'                                               88     88      ,8P  "));
+        printLine(30, RED("88              ,adPPYba,    ,adPPYba,    ,adPPYb,88     88aaaaaa8P'  8b       d8   ,adPPYba,  "));
+        printLine(30, RED("88      88888  a8\"     \"8a  a8\"     \"8a  a8\"    `Y88     88\"\"\"\"\"\"8b,  `8b     d8'  a8P_____88 "));
+        printLine(30, RED("Y8,        88  8b       d8  8b       d8  8b       88     88      `8b   `8b   d8'   8PP\"\"\"\"\"\"\"  "));
+        printLine(30, RED(" Y8a.    .a88  \"8a,   ,a8\"  \"8a,   ,a8\"  \"8a,   ,d88     88      a8P    `8b,d8'    \"8b,   ,aa  "));
+        printLine(30, RED("  `\"Y88888P\"    `\"YbbdP\"'    `\"YbbdP\"'    `\"8bbdP\"Y8     88888888P\"       Y88'      `\"Ybbd8\"'  "));
+        printLine(30, RED("                                                                          d8'      "));
+        printLine(30, RED("                                                                         d8' "));
         line();
     }
 
+    //function to print admin
+    protected void printAdmin() 
+    {
+        printLine(63, RED("      ...                   "));
+        printLine(63, RED(".=+*#%%%.                   "));
+        printLine(63, RED("#%%%%%%+                    "));
+        printLine(63, RED("%%%%%%%=            :----.  "));
+        printLine(63, RED("%%%#*+++-:.      .::::--::. "));
+        printLine(63, RED("%%%===+##*+:     =*%*=-::::."));
+        printLine(63, RED("#%%:     -**    .+:         "));
+        printLine(63, RED("*%%#::::..:**.   :  .:::: .:"));
+        printLine(63, RED("+#::--====+%%*     :-==--::."));
+        printLine(63, RED("==        +%%#              "));
+        printLine(63, RED("--       +%%%#              "));
+        printLine(63, RED(":+      =%%%%=       .      "));
+        printLine(63, RED(" #.:==-:.:=#%=  .:.  .::=:: "));
+        printLine(63, RED(" == +=+.    +%#%*:    -*:=  "));
+        printLine(63, RED("  *=:-:+++*##= .+##+++= -:  "));
+        printLine(63, RED("   ++:-    .::::::.    =:   "));
+        printLine(63, RED("    :*:-.    -++=.   :-     "));
+        printLine(63, RED("      =-..    %%:   :.      "));
+        printLine(63, RED("       :=:.  -%%+  .        "));
+        printLine(63, RED("         ::  -%%+           "));
+        printLine(63, RED("              #%.           "));
+        printLine(63, RED("              :=            "));
+    }
+
     // prints the header 
-    protected void printHeader()
+    protected void printHeader(String x)
+    {
+        cls();
+        line();
+        line();
+        line(WHI("                                                           (\\_(\\"));
+        line("                                                           ( " + RED("-") + "." + RED("-") + ")           ^ ^");
+        line("                   _______                     " + RED("$") + "  _________c(\")(\")_________(" + RED("-") + "." + RED("-") + ")_________________________  " + RED("$"));
+        line("                  |       |                   [_]|                                                       |[_]");
+        line("                  | " + RED("KWAGO") + " |                    | |   F A S T   F O O D   O R D E R I N G   S Y S T E M   | | ");
+        line("                  | ______|                    | |                " + YEL("GREGORIO") + " - " + YEL("MATA") + " - " + YEL("PINEDA") + "               | | ");
+        line("            ,___, |/                           | |_______________________________________________________| | ");
+        line("            ("+ YEL("o,o") + ")                              0" + RED("=") + "----------------------" + RED("=") + "[ " + GRE("~~~~") + RED("{{@") + " ]" + RED("=") + "----------------------" + RED("=") + "0 ");   
+        line("            /)_)                               ");   
+        generateTitle(x);
+        line();
+    }   
+
+    // function to print supplier
+    protected void printSupplier() 
     {
         line();
-        line();
-        line(WHI + "                                                           (\\_(\\");
-        line("                                                           ( " + RED + "-" + WHI + "." + RED + "-" + WHI + ")           ^ ^");
-        line("                   _______                     " + RED + "$" + WHI + "  _________c(\")(\")_________(" + RED + "-" + WHI + "." + RED + "-" + WHI + ")_________________________  " + RED + "$");
-        line(WHI + "                  |       |                   [_]|                                                       |[_]");
-        line("                  | " + RED + "KWAGO" + WHI + " |                    | |   F A S T   F O O D   O R D E R I N G   S Y S T E M   | | ");
-        line(WHI + "                  | ______|                    | |                " + YEL + "GREGORIO" + WHI + " - " + YEL + "MATA" + WHI + " - " + YEL + "PINEDA" + WHI + "               | | ");
-        line("            ,___, |/                           | |_______________________________________________________| | ");
-        line("            ("+ YEL +"o,o" + WHI + ")                              0" + RED + "=" + WHI + "----------------------" + RED + "=" + WHI + "[ " + GRE + "~~~~" + RED + "{{@" + WHI + " ]" + RED + "=" + WHI + "----------------------" + RED + "=" + WHI + "0 ");   
-        line("            /)_)                               " + RES);   
+        printLine(39, RED("        ________________________________________                             "));
+        printLine(39, RED("       /                                       /|    _______                 "));
+        printLine(39, RED("      /_______________________________________/ |// /      /\\               "));
+        printLine(39, RED("      |                                      |  //|/______/  \\________      "));
+        printLine(39, RED("      |                         ,_,          |  |||       \\  /       /|     "));
+        printLine(39, RED("______|	     KWAGO FAST FOOD  {O,o}         |  |||________\\/_______/ |______"));
+        printLine(39, RED("      |                        /)__)         |  |||        |       |  |      "));
+        printLine(39, RED("      |                         \" \"          | /|||        |       |  |    "));
+        printLine(39, RED("      |______________________________________|/_|||________|______ |  |      "));
+        printLine(39, RED("___  _|  ____   ____	           ____   ____ |_/         ____  \\| /__  ___"));
+        printLine(39, RED("      |_/    \\ /    \\ _____________/    \\ /    \\|_________ /    \\__|/   "));
+        printLine(39, RED("       |  ()  |  ()  ||           |  ()  |  ()  ||        |  ()  ||          "));
+        printLine(39, RED("        \\____//\\____//             \\____//\\____//          \\____//      "));
+        printLine(39, RED("_____________________________________________________________________________"));
+        line();    
     }
 
     // function to generate title/line to the system
@@ -588,20 +705,21 @@ public class GSystem
     {
         switch (x)
         {
-            case "null"                 -> line(WHI + "00" + RED + "=" + WHI + "---------------------------------------------------------------------" + RED + "=" + WHI + "[ " + GRE + "~~~" + RED + "{@" + WHI + " ]" + RED + "=" + WHI + "---------------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "main_menu"            -> line(WHI + "00" + RED + "=" + WHI + "----------m-m--------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A I N   M E N U" + WHI + " ]" + RED + "=" + WHI + "---------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "order_food"           -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "O R D E R   F O O D" + WHI + " ]" + RED + "=" + WHI + "--------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "order_food_meals"     -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "O R D E R   F O O D" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "MEALS )" + RED + "=" + WHI + "-----------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "order_food_sandwich"  -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "O R D E R   F O O D" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "SANDWICH )" + RED + "=" + WHI + "--------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "order_food_drinks"    -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "O R D E R   F O O D" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "DRINKS )" + RED + "=" + WHI + "----------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "my_cart"              -> line(WHI + "00" + RED + "=" + WHI + "----------m-m----------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M Y   C A R T" + WHI + " ]" + RED + "=" + WHI + "-----------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "administration"       -> line(WHI + "00" + RED + "=" + WHI + "----------m-m---------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "A D M I N I S T R A T I O N" + WHI + " ]" + RED + "=" + WHI + "----------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "manage_menu"          -> line(WHI + "00" + RED + "=" + WHI + "----------m-m------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A N A G E   M E N U" + WHI + " ]" + RED + "=" + WHI + "-------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);  
-            case "manage_menu_meals"    -> line(WHI + "00" + RED + "=" + WHI + "----------m-m------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A N A G E   M E N U" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "MEALS" + YEL + " )" + RED + "=" + WHI + "----------------------------------------------" + RED + "=" + WHI + "00" + RES);  
-            case "manage_menu_sandwich" -> line(WHI + "00" + RED + "=" + WHI + "----------m-m------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A N A G E   M E N U" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "SANDWICH" + YEL + " )" + RED + "=" + WHI + "-------------------------------------------" + RED + "=" + WHI + "00" + RES);  
-            case "manage_menu_drinks"   -> line(WHI + "00" + RED + "=" + WHI + "----------m-m------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "M A N A G E   M E N U" + WHI + " ]" + RED + "=" + WHI + "----" + RED + "=" + YEL + "( " + WHI + "DRINKS" + YEL + " )" + RED + "=" + WHI + "---------------------------------------------" + RED + "=" + WHI + "00" + RES);  
-            case "report"               -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-----------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "R E P O R T" + WHI + " ]" + RED + "=" + WHI + "------------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
-            case "exit"                 -> line(WHI + "00" + RED + "=" + WHI + "----------m-m-------------------------------------------------------" + RED + "=" + WHI + "[ " + YEL + "E X I T" + WHI + " ]" + RED + "=" + WHI + "--------------------------------------------------------------------" + RED + "=" + WHI + "00" + RES);
+            case "null"                 -> line(WHI("00") + RED("=") + "---------------------------------------------------------------------" + RED("=") + "[ " + GRE("~~~") + RED("{@") + " ]" + RED("=") + "---------------------------------------------------------------------" + RED("=") + "00");
+            case "main_menu"            -> line(WHI("00") + RED("=") + "----------m-m--------------------------------------------------" + RED("=") + "[ " + YEL("M A I N   M E N U") + " ]" + RED("=") + "---------------------------------------------------------------" + RED("=") + "00");
+            case "order_food"           -> line(WHI("00") + RED("=") + "----------m-m-------------------------------------------------" + RED("=") + "[ " + YEL("O R D E R   F O O D") + " ]" + RED("=") + "--------------------------------------------------------------" + RED("=") + "00");
+            case "order_food_meals"     -> line(WHI("00") + RED("=") + "----------m-m-------------------------------------------------" + RED("=") + "[ " + YEL("O R D E R   F O O D") + " ]" + RED("=") + "----" + RED("=") + YEL("( ") + WHI("MEALS") + YEL(" )") + RED("=") + "-----------------------------------------------" + RED("=") + "00");
+            case "order_food_sandwich"  -> line(WHI("00") + RED("=") + "----------m-m-------------------------------------------------" + RED("=") + "[ " + YEL("O R D E R   F O O D") + " ]" + RED("=") + "----" + RED("=") + YEL("( ") + WHI("SANDWICH") + YEL(" )") + RED("=") + "--------------------------------------------" + RED("=") + "00");
+            case "order_food_drinks"    -> line(WHI("00") + RED("=") + "----------m-m-------------------------------------------------" + RED("=") + "[ " + YEL("O R D E R   F O O D") + " ]" + RED("=") + "----" + RED("=") + YEL("( ") + WHI("DRINKS") + YEL(" )") + RED("=") + "----------------------------------------------" + RED("=") + "00");
+            case "my_cart"              -> line(WHI("00") + RED("=") + "----------m-m----------------------------------------------------" + RED("=") + "[ " + YEL("M Y   C A R T") + " ]" + RED("=") + "-----------------------------------------------------------------" + RED("=") + "00");
+            case "administration"       -> line(WHI("00") + RED("=") + "----------m-m---------------------------------------------" + RED("=") + "[ " + YEL("A D M I N I S T R A T I O N") + " ]" + RED("=") + "----------------------------------------------------------" + RED("=") + "00");
+            case "manage_menu"          -> line(WHI("00") + RED("=") + "----------m-m------------------------------------------------" + RED("=") + "[ " + YEL("M A N A G E   M E N U") + " ]" + RED("=") + "-------------------------------------------------------------" + RED("=") + "00");  
+            case "manage_menu_meals"    -> line(WHI("00") + RED("=") + "----------m-m------------------------------------------------" + RED("=") + "[ " + YEL("M A N A G E   M E N U") + " ]" + RED("=") + "----" + RED("=") + YEL("( ") + WHI("MEALS") + YEL(" )")  + RED("=") + "----------------------------------------------" + RED("=") + "00");  
+            case "manage_menu_sandwich" -> line(WHI("00") + RED("=") + "----------m-m------------------------------------------------" + RED("=") + "[ " + YEL("M A N A G E   M E N U") + " ]" + RED("=") + "----" + RED("=") + YEL("( ") + WHI("SANDWICH") + YEL(" )")  + RED("=") + "-------------------------------------------" + RED("=") + "00");  
+            case "manage_menu_drinks"   -> line(WHI("00") + RED("=") + "----------m-m------------------------------------------------" + RED("=") + "[ " + YEL("M A N A G E   M E N U") + " ]" + RED("=") + "----" + RED("=") + YEL("( ") + WHI("DRINKS") + YEL(" )")  + RED("=") + "---------------------------------------------" + RED("=") + "00");  
+            case "report"               -> line(WHI("00") + RED("=") + "----------m-m-----------------------------------------------------" + RED("=") + "[ " + YEL("R E P O R T") + " ]" + RED("=") + "------------------------------------------------------------------" + RED("=") + "00");
+            case "supplier"             -> line(WHI("00") + RED("=") + "----------m-m---------------------------------------------------" + RED("=") + "[ " + YEL("S U P P L I E R") + " ]" + RED("=") + "----------------------------------------------------------------" + RED("=") + "00");
+            case "exit"                 -> line(WHI("00") + RED("=") + "----------m-m-------------------------------------------------------" + RED("=") + "[ " + YEL("E X I T") + " ]" + RED("=") + "--------------------------------------------------------------------" + RED("=") + "00");
         }
     }
 }

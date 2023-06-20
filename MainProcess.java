@@ -28,12 +28,9 @@ public class MainProcess extends ErrorHandler
         while (running) running = MainMenu();
 
         // prints when the user exit
-        cls();
-        printHeader();
-        generateTitle("exit");
-        line();
+        printHeader("exit");
         printExit();
-        printLine(62, WHI + "THANK YOU FOR USING OUR SYSTEM!" + RES);
+        printLine(62, WHI("THANK YOU FOR USING OUR SYSTEM!"));
         line("\n");
         generateTitle("null");
         pause();
@@ -42,15 +39,12 @@ public class MainProcess extends ErrorHandler
     // menu of the system
     private boolean MainMenu()
     {
-        cls();
-        printHeader();
-        generateTitle("main_menu");
-        line();
+        printHeader("main_menu");
         button(1, "ORDER FOOD");
         button(2, "ADMINISTRATION");
         button(3, "EXIT");
         line();
-        printLine(55, WHI + "ENTER CHOICE" + RES);
+        printLine(55, WHI("ENTER CHOICE"));
         pointer();
         int menuChoice = getChoice(1, 3);
     
